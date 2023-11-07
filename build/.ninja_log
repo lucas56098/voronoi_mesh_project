@@ -1,0 +1,7 @@
+# ninja log v5
+1	229	1699367404659294495	CMakeFiles/voronoi_mesh_project.dir/main.cpp.o	3ef09c9485b01141
+4	40	1699367503891416962	CMakeFiles/voronoi_mesh_project.dir/Point.cpp.o	4e992759673fc63f
+4	41	1699367503892445534	CMakeFiles/voronoi_mesh_project.dir/Halfplane.cpp.o	89fa251cf5f35066
+41	78	1699367503928592691	voronoi_mesh_project	8c2f575395843698
+5	269	1699367529215495239	CMakeFiles/voronoi_mesh_project.dir/main.cpp.o	3ef09c9485b01141
+269	305	1699367529251328247	voronoi_mesh_project	8c2f575395843698
