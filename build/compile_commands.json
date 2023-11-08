@@ -16,5 +16,11 @@
   "command": "/usr/bin/clang++ -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -o CMakeFiles/voronoi_mesh_project.dir/Halfplane.cpp.o -c \"/Users/lucas_schleuss/vs code/voronoi_mesh_project/Halfplane.cpp\"",
   "file": "/Users/lucas_schleuss/vs code/voronoi_mesh_project/Halfplane.cpp",
   "output": "CMakeFiles/voronoi_mesh_project.dir/Halfplane.cpp.o"
+},
+{
+  "directory": "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build",
+  "command": "/usr/bin/clang++ -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -o CMakeFiles/voronoi_mesh_project.dir/VoronoiCell.cpp.o -c \"/Users/lucas_schleuss/vs code/voronoi_mesh_project/VoronoiCell.cpp\"",
+  "file": "/Users/lucas_schleuss/vs code/voronoi_mesh_project/VoronoiCell.cpp",
+  "output": "CMakeFiles/voronoi_mesh_project.dir/VoronoiCell.cpp.o"
 }
 ]
