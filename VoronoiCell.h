@@ -10,8 +10,9 @@ class VoronoiCell {
 
 public:
     VoronoiCell();
-    VoronoiCell(Point inseed, Point* in_other_points);
+    VoronoiCell(Point inseed, Point* in_other_points, int N_pts);
     ~VoronoiCell();
+    int N;
     Point seed;
     Point* other_points;
     vector<Halfplane> halfplanes;

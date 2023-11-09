@@ -62,20 +62,16 @@ int main () {
     }
 
     // initalize VoronoiCell
-    VoronoiCell vcell(pts[0], other_pts);    
+    //VoronoiCell vcell(seed, other_pts, N_seeds);    
+    //vcell.construct_cell();
 
-    //Halfplane hp1(pts[0], pts[1], 3);
-    //Halfplane hp2(pts[0], pts[2], 3);
-    Halfplane hp1(Point(4,-3), Point(3,-4), 3);
-    Halfplane hp2(Point(-7,-1), Point(-5, -5), 3);
+    // test specific cell
+    Point seedl = Point(0.5, 0.5);
+    Point* other_ptsl = new Point[1];
+    other_ptsl[0] = Point(0.5, 0.3);
 
-    vcell.intersect_two_halfplanes(hp1, hp2);
-
-    // read everyting out about that intersection
-    cout << hp1.intersections[0].intersect_pt.x << endl;
-    cout << hp1.intersections[0].intersect_pt.y << endl;
-    cout << hp1.intersections[0].dist_to_midpoint << endl;
-    cout << (*hp1.intersections[0].intersecting_with).seed1.x << endl;
+    VoronoiCell vcell(seedl, other_ptsl, 2);
+    vcell.construct_cell();
 
     cout << "done" << endl;
 
