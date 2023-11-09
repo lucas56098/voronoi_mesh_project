@@ -94,6 +94,15 @@ void VoronoiCell::construct_cell() {
     // do intersect all halfplanes
     intersect_all_halfplanes();
 
+    // search for closest point
+    
+
+    // start in positive direction to first intersection + save edge + verticies
+    // change to next halfplane + save edge
+    // until next intersection == first intersection
+
+
+/*small test for correctness of intersect all halfplanes (also need to comment in stuff in main)
     for (int i = 0; i<N+3; i++) {
         cout << halfplanes[i].boundary << endl;
         for (int j = 0; j< halfplanes[i].intersections.size(); j++) {
@@ -104,11 +113,6 @@ void VoronoiCell::construct_cell() {
             cout << (*halfplanes[i].intersections[j].intersecting_with).seed2.y;
             cout << endl;
         }
-    }
-    
-    // search for closest point
-    // start in positive direction to first intersection + save edge + verticies
-    // change to next halfplane + save edge
-    // until next intersection == first intersection
+    }*/
 
 }

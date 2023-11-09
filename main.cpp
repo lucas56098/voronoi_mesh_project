@@ -65,13 +65,16 @@ int main () {
     //VoronoiCell vcell(seed, other_pts, N_seeds);    
     //vcell.construct_cell();
 
-    // test specific cell
+
+
+    /* test specific cell
     Point seedl = Point(0.5, 0.5);
     Point* other_ptsl = new Point[1];
     other_ptsl[0] = Point(0.5, 0.3);
 
     VoronoiCell vcell(seedl, other_ptsl, 2);
     vcell.construct_cell();
+    */
 
     cout << "done" << endl;
 

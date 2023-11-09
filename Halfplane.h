@@ -11,7 +11,7 @@ struct intersection
     {
         Point intersect_pt;
         Halfplane* intersecting_with;
-        float dist_to_midpoint;
+        float dist_to_midpoint; //distance signed relative to half_plane_vec
     };
 
 class Halfplane {
