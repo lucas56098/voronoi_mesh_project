@@ -2,6 +2,7 @@
 #include <random>
 #include "Point.h"
 #include "VoronoiMesh.h"
+#include <chrono>
 //#include "Halfplane.h"
 //#include "VoronoiCell.h"
 //using namespace std;
@@ -42,7 +43,7 @@ Point* generate_seed_points(int N, bool fixed_random_seed) {
 int main () {
 
     // generate seeds for mesh
-    int N_seeds = 20;
+    int N_seeds = 50;
     Point* pts = generate_seed_points(N_seeds, true);
     
     /* int N_seeds = 4;
@@ -53,9 +54,22 @@ int main () {
     pts[3] = Point(0.8, 0.7);
     */
 
+    // Get the current time point before the code execution
+    chrono::high_resolution_clock::time_point start_time = chrono::high_resolution_clock::now();
+
     // construct mesh
     VoronoiMesh vmesh(pts, N_seeds);
     vmesh.construct_mesh();
+
+    // Get the current time point after the code execution
+    chrono::high_resolution_clock::time_point end_time = chrono::high_resolution_clock::now();
+
+    // Calculate the duration of the code execution
+    chrono::microseconds duration = chrono::duration_cast<chrono::microseconds>(end_time - start_time);
+
+    // Output the duration in microseconds
+    cout << "Execution time: " << duration.count() << " microseconds" << endl;
+
 
     // save mesh to file
     vmesh.save_mesh_to_files();
