@@ -1,8 +1,9 @@
 #include <iostream>
 #include <random>
 #include "Point.h"
-#include "Halfplane.h"
-#include "VoronoiCell.h"
+#include "VoronoiMesh.h"
+//#include "Halfplane.h"
+//#include "VoronoiCell.h"
 //using namespace std;
 
 // generates seed points to use for mesh generation
@@ -41,13 +42,29 @@ Point* generate_seed_points(int N, bool fixed_random_seed) {
 int main () {
 
     // generate seeds for mesh
-    int N_seeds = 5;
+    int N_seeds = 20;
     Point* pts = generate_seed_points(N_seeds, true);
+    
+    /* int N_seeds = 4;
+    Point* pts = new Point[N_seeds];
+    pts[0] = Point(0.5, 0.5);
+    pts[1] = Point(0.5, 0.3);
+    pts[2] = Point(0.2, 0.8);
+    pts[3] = Point(0.8, 0.7);
+    */
+
+    // construct mesh
+    VoronoiMesh vmesh(pts, N_seeds);
+    vmesh.construct_mesh();
+
+    // save mesh to file
+    vmesh.save_mesh_to_files();
 
 
 // testing area 
 
     // for given seed: get seedpoint and other points out of all points
+    /*
     int var = 0;
 
     Point seed = pts[var];
@@ -59,14 +76,14 @@ int main () {
         } else {
             other_pts[i] = pts[i+1];
         }
-    }
+    }*/
 
     // initalize VoronoiCell
     //VoronoiCell vcell(seed, other_pts, N_seeds);    
     //vcell.construct_cell();
 
 
-
+    /*
     // test specific cell
     Point seedl = Point(0.5, 0.5);
     Point* other_ptsl = new Point[2];
@@ -76,9 +93,9 @@ int main () {
     VoronoiCell vcell(seedl, other_ptsl, 3);
     vcell.construct_cell();
     vcell.print_cell();
-
+    */
     cout << "done" << endl;
-
+    
 
 }
 

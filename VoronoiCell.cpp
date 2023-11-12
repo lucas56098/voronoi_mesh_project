@@ -136,6 +136,7 @@ void VoronoiCell::construct_cell() {
     Halfplane current_hp;
     search_hp_closest_to_seed(current_hp);
     Halfplane first_hp = current_hp;
+    Point last_vertex_seed_2 = Point(42,42);
 
     // intitalize last_vertex  for the first time
     Point last_vertex = current_hp.get_midpoint();
@@ -158,8 +159,11 @@ void VoronoiCell::construct_cell() {
         // calculate signed relative distance
         float rel_dist =  current_hp.intersections[i].dist_to_midpoint - last_vertex_dist_to_midpoint;
 
+        bool same_vertex = (((*current_hp.intersections[i].intersecting_with).seed2.x == last_vertex_seed_2.x) && 
+                                (*current_hp.intersections[i].intersecting_with).seed2.y == last_vertex_seed_2.y);
+
         // if distance <= smallest_pos_distance and positive replace intersection with closer one
-        if (rel_dist <= smallest_pos_dist && rel_dist > 0) {
+        if (rel_dist <= smallest_pos_dist && rel_dist > 0 && !same_vertex) {
             // check if there could be a degenerate case
             if (rel_dist == smallest_pos_dist) {
                 need_to_check_for_degeneracy = true;
@@ -203,6 +207,8 @@ void VoronoiCell::construct_cell() {
     // when done save current halfplane as edge and next closest intersection as vertex
     edges.push_back(current_hp);
     verticies.push_back(vertex);
+
+    last_vertex_seed_2 = Point(current_hp.seed2.x, current_hp.seed2.y);
 
     // update last vertex and current hp
     last_vertex = vertex;
