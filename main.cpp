@@ -3,7 +3,7 @@
 #include "Point.h"
 #include "Halfplane.h"
 #include "VoronoiCell.h"
-using namespace std;
+//using namespace std;
 
 // generates seed points to use for mesh generation
 Point* generate_seed_points(int N, bool fixed_random_seed) {
@@ -67,14 +67,15 @@ int main () {
 
 
 
-    /* test specific cell
+    // test specific cell
     Point seedl = Point(0.5, 0.5);
-    Point* other_ptsl = new Point[1];
+    Point* other_ptsl = new Point[2];
     other_ptsl[0] = Point(0.5, 0.3);
+    other_ptsl[1] = Point(-0.5, 0.3);
 
-    VoronoiCell vcell(seedl, other_ptsl, 2);
+    VoronoiCell vcell(seedl, other_ptsl, 3);
     vcell.construct_cell();
-    */
+    vcell.print_cell();
 
     cout << "done" << endl;
 

@@ -1,7 +1,7 @@
 #include "Halfplane.h"
 #include <vector>
 #include <cmath>
-using namespace std;
+
 
 Halfplane::Halfplane() {}
 

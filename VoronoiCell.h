@@ -4,7 +4,7 @@
 
 #ifndef VoronoiCell_h
 #define VoronoiCell_h
-using namespace std;
+//using namespace std;
 
 class VoronoiCell {
 
@@ -21,7 +21,11 @@ public:
     void intersect_all_halfplanes();
     void intersect_two_halfplanes(Halfplane &hp1, Halfplane &hp2);
     void construct_cell();
+    void print_cell();
 private:
+    void generate_halfplane_vector();
+    void search_hp_closest_to_seed(Halfplane &first_hp);
+    float get_signed_angle(Point u, Point v);
 
 
 };
