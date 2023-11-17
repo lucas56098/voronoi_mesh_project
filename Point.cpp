@@ -2,7 +2,7 @@
 
 Point::Point() {}
 
-Point::Point(float xin, float yin) {
+Point::Point(double xin, double yin) {
     x = xin;
     y = yin;
 }

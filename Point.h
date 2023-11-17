@@ -5,10 +5,10 @@ class Point {
 
 public:
     Point();
-    Point(float xin, float yin);
+    Point(double xin, double yin);
     ~Point();
-    float x;
-    float y;
+    double x;
+    double y;
 };
 
 #endif

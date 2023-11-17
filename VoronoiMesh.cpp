@@ -51,7 +51,6 @@ void VoronoiMesh::save_mesh_to_files(int nr) {
     for (int i = 0; i < N; i++) {
         seed_list << "\n" << pts[i].x << "," << pts[i].y;
     }
-
     seed_list.close();
 
     // save vertices to file
@@ -67,8 +66,8 @@ void VoronoiMesh::save_mesh_to_files(int nr) {
         
         // loop through verticies for vertex list
         for (int j = 0; j<vcells[i].verticies.size(); j++) {
-            float x = vcells[i].verticies[j].x;
-            float y = vcells[i].verticies[j].y;
+            double x = vcells[i].verticies[j].x;
+            double y = vcells[i].verticies[j].y;
             vertex_list << "\n" << x << "," << y;
         }
 
@@ -90,10 +89,10 @@ void VoronoiMesh::save_mesh_to_files(int nr) {
 
         // loop through edges
         for (int j = 0; j<nr; j++) {
-            float x1 = vcells[i].verticies[j].x;
-            float y1 = vcells[i].verticies[j].y;
-            float x2 = vcells[i].verticies[(j+1)%nr].x;
-            float y2 = vcells[i].verticies[(j+1)%nr].y;
+            double x1 = vcells[i].verticies[j].x;
+            double y1 = vcells[i].verticies[j].y;
+            double x2 = vcells[i].verticies[(j+1)%nr].x;
+            double y2 = vcells[i].verticies[(j+1)%nr].y;
 
             edge_list << "\n" << x1 << "," << y1 << "," << x2 << "," << y2;
         }

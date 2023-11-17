@@ -27,12 +27,12 @@ Point* generate_seed_points(int N, bool fixed_random_seed, int min, int max, int
 
     // define uniform random distribution
     eng = default_random_engine(random_seed);
-    uniform_real_distribution<float> distr(min, max);
+    uniform_real_distribution<double> distr(min, max);
 
     // generate random coordinates for Points
     for (int i = 0; i < N; ++i) {
-        float x = distr(eng);
-        float y = distr(eng);
+        double x = distr(eng);
+        double y = distr(eng);
         points[i] = Point(x, y);
     }
 

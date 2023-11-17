@@ -25,7 +25,7 @@ public:
 private:
     void generate_halfplane_vector();
     void search_hp_closest_to_seed(Halfplane &first_hp);
-    float get_signed_angle(Point u, Point v);
+    double get_signed_angle(Point u, Point v);
 
 
 };

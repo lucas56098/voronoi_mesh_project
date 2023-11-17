@@ -24,10 +24,10 @@ Halfplane::~Halfplane() {}
 // returns normalized vector orthogonal to vector seed2-seed1
 Point Halfplane::get_half_plane_vec() {
 
-    float hp_vec_x = seed2.y - seed1.y;
-    float hp_vec_y = - (seed2.x - seed1.x);
+    double hp_vec_x = seed2.y - seed1.y;
+    double hp_vec_y = - (seed2.x - seed1.x);
 
-    float norm = sqrt(hp_vec_x * hp_vec_x + hp_vec_y * hp_vec_y);
+    double norm = sqrt(hp_vec_x * hp_vec_x + hp_vec_y * hp_vec_y);
 
     return Point(hp_vec_x/norm, hp_vec_y/norm);
 }
@@ -35,8 +35,8 @@ Point Halfplane::get_half_plane_vec() {
 // reutrns midpoint between the two seeds
 Point Halfplane::get_midpoint() {
     
-    float x_mid = 0.5 * (seed1.x + seed2.x);
-    float y_mid = 0.5 * (seed1.y + seed2.y);
+    double x_mid = 0.5 * (seed1.x + seed2.x);
+    double y_mid = 0.5 * (seed1.y + seed2.y);
 
     return Point(x_mid, y_mid);
 }
