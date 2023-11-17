@@ -39,30 +39,29 @@ Point* generate_seed_points(int N, bool fixed_random_seed, int min, int max, int
     return points;
 }
 
+// generates moving mesh and stores it frame by frame in files
 void generate_animation_files() {
     
-    // generate points for mesh
-        
+    // generate initial points and velocities for mesh
     int N_seeds = 30;
     Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
-
     Point* vel = generate_seed_points(N_seeds, true, -1, 1, 38);
 
+    // for each frame generate mesh and store it in files
     for (int i = 0; i < 300; i++) {
         
-
+        // update all particles positions
         for (int j = 0; j < N_seeds; j++) {
 
-            
+            // update positions according to velocity
             pts[j].x = pts[j].x + vel[j].x * 0.005;
             pts[j].y = pts[j].y + vel[j].y * 0.005;
 
+            // change velocities at boundary
             if (pts[j].x < 0 || pts[j].x > 1) {
                 vel[j].x = -vel[j].x;
                 pts[j].x = pts[j].x + 2 * vel[j].x * 0.005;
             }
-
-
             if (pts[j].y < 0 || pts[j].y > 1) {
                 vel[j].y = -vel[j].y;
                 pts[j].y = pts[j].y + 2 * vel[j].y * 0.005;
@@ -88,14 +87,6 @@ int main () {
     int N_seeds = 100;
     Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
     
-    /* int N_seeds = 4;
-    Point* pts = new Point[N_seeds];
-    pts[0] = Point(0.5, 0.5);
-    pts[1] = Point(0.5, 0.3);
-    pts[2] = Point(0.2, 0.8);
-    pts[3] = Point(0.8, 0.7);
-    */
-
     // Get the current time point before the code execution
     chrono::high_resolution_clock::time_point start_time = chrono::high_resolution_clock::now();
 
@@ -112,46 +103,13 @@ int main () {
     // Output the duration in microseconds
     cout << "Execution time: " << duration.count() << " microseconds" << endl;
 
-
     // save mesh to file
     vmesh.save_mesh_to_files(0);
 
+
+    // generate animation for a moving mesh
     generate_animation_files();
 
-
-// testing area 
-
-    // for given seed: get seedpoint and other points out of all points
-    /*
-    int var = 0;
-
-    Point seed = pts[var];
-    Point* other_pts = new Point[N_seeds-1];
-
-    for (int i = 0; i<N_seeds-1; i++) {
-        if (var > i) {
-            other_pts[i] = pts[i];
-        } else {
-            other_pts[i] = pts[i+1];
-        }
-    }*/
-
-    // initalize VoronoiCell
-    //VoronoiCell vcell(seed, other_pts, N_seeds);    
-    //vcell.construct_cell();
-
-
-    /*
-    // test specific cell
-    Point seedl = Point(0.5, 0.5);
-    Point* other_ptsl = new Point[2];
-    other_ptsl[0] = Point(0.5, 0.3);
-    other_ptsl[1] = Point(-0.5, 0.3);
-
-    VoronoiCell vcell(seedl, other_ptsl, 3);
-    vcell.construct_cell();
-    vcell.print_cell();
-    */
     cout << "done" << endl;
     
 
