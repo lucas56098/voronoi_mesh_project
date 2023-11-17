@@ -2,9 +2,10 @@
 Small C++ Project to generate a voronoi mesh in the most naive way possible. Still work in progress...
 
 ### Later on
-- Unit-tests
-- Verify correctness
-- Data Export to Python for Visualisation
+- Benachmarking (Debug and Release Version)
+- Improve performance (do profiling)
+- Correctness checks
+- Add a volume calculation
 - Other algorithms and comparison...
 
 ![til](./example_voronoi_animation.gif)
