@@ -8,7 +8,7 @@
 //using namespace std;
 
 // generates seed points to use for mesh generation
-Point* generate_seed_points(int N, bool fixed_random_seed) {
+Point* generate_seed_points(int N, bool fixed_random_seed, int min, int max, int rd_seed) {
     Point* points = new Point[N];
 
     unsigned int random_seed;
@@ -18,7 +18,7 @@ Point* generate_seed_points(int N, bool fixed_random_seed) {
     if (fixed_random_seed) {
         //cout << "specify random_seed: ";
         //cin >> random_seed;
-        random_seed = 42;
+        random_seed = rd_seed;
     } else {
         random_device rd;
         random_seed = rd();
@@ -27,7 +27,7 @@ Point* generate_seed_points(int N, bool fixed_random_seed) {
 
     // define uniform random distribution
     eng = default_random_engine(random_seed);
-    uniform_real_distribution<float> distr(0, 1);
+    uniform_real_distribution<float> distr(min, max);
 
     // generate random coordinates for Points
     for (int i = 0; i < N; ++i) {
@@ -39,12 +39,54 @@ Point* generate_seed_points(int N, bool fixed_random_seed) {
     return points;
 }
 
+void generate_animation_files() {
+    
+    // generate points for mesh
+        
+    int N_seeds = 150;
+    Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
+
+    Point* vel = generate_seed_points(N_seeds, true, -1, 1, 38);
+
+    for (int i = 0; i < 300; i++) {
+        
+
+        for (int j = 0; j < N_seeds; j++) {
+
+            
+            pts[j].x = pts[j].x + vel[j].x * 0.005;
+            pts[j].y = pts[j].y + vel[j].y * 0.005;
+
+            if (pts[j].x < 0 || pts[j].x > 1) {
+                vel[j].x = -vel[j].x;
+                pts[j].x = pts[j].x + 2 * vel[j].x * 0.005;
+            }
+
+
+            if (pts[j].y < 0 || pts[j].y > 1) {
+                vel[j].y = -vel[j].y;
+                pts[j].y = pts[j].y + 2 * vel[j].y * 0.005;
+            }
+
+        }
+        
+
+        // construct mesh
+        VoronoiMesh vmesh(pts, N_seeds);
+        vmesh.construct_mesh();
+        vmesh.save_mesh_to_files(i);
+        cout << i << endl;
+
+    }
+
+}
+
 // generates points, will generate mesh, stop time and do tests
 int main () {
 
     // generate seeds for mesh
-    int N_seeds = 50;
-    Point* pts = generate_seed_points(N_seeds, true);
+    int N_seeds = 100;
+    Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
     
     /* int N_seeds = 4;
     Point* pts = new Point[N_seeds];
@@ -72,7 +114,9 @@ int main () {
 
 
     // save mesh to file
-    vmesh.save_mesh_to_files();
+    vmesh.save_mesh_to_files(0);
+
+    generate_animation_files();
 
 
 // testing area 

@@ -14,7 +14,7 @@ public:
     vector<VoronoiCell> vcells;
     int N;
     void construct_mesh();
-    void save_mesh_to_files();
+    void save_mesh_to_files(int nr);
 private:
 
 };

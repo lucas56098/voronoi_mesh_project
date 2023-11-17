@@ -38,10 +38,13 @@ void VoronoiMesh::construct_mesh() {
 
 }
 
-void VoronoiMesh::save_mesh_to_files() {
+void VoronoiMesh::save_mesh_to_files(int nr) {
 
     // save seeds to file
-    ofstream seed_list("seed_list.csv");
+
+    string name = "files/seed_list" + to_string(nr) + ".csv";
+
+    ofstream seed_list(name);
 
     seed_list << "seed_x,seed_y";
 
@@ -52,7 +55,10 @@ void VoronoiMesh::save_mesh_to_files() {
     seed_list.close();
 
     // save vertices to file
-    ofstream vertex_list("vertex_list.csv");
+
+    name = "files/vertex_list" + to_string(nr) + ".csv";
+
+    ofstream vertex_list(name);
 
     vertex_list << "vertex_x,vertex_y";
 
@@ -71,7 +77,9 @@ void VoronoiMesh::save_mesh_to_files() {
     vertex_list.close();
 
     // save edges to file
-    ofstream edge_list("edge_list.csv");
+    name = "files/edge_list" + to_string(nr) + ".csv";
+
+    ofstream edge_list(name);
 
     edge_list << "edge1_x, edge1_y, edge2_x, edge2_y";
 
