@@ -12,7 +12,7 @@
 
 # =============================================================================
 # Project: voronoi_mesh_project
-# Configurations: Debug
+# Configurations: Release
 # =============================================================================
 
 #############################################
@@ -24,7 +24,7 @@ ninja_required_version = 1.5
 #############################################
 # Set configuration variable for custom commands.
 
-CONFIGURATION = Debug
+CONFIGURATION = Release
 # =============================================================================
 # Include auxiliary files.
 
@@ -217,33 +217,33 @@ build ContinuousSubmit: phony CMakeFiles/ContinuousSubmit
 
 build cmake_object_order_depends_target_voronoi_mesh_project: phony || CMakeFiles/voronoi_mesh_project.dir
 
-build CMakeFiles/voronoi_mesh_project.dir/main.cpp.o: CXX_COMPILER__voronoi_mesh_project_unscanned_Debug /Users/lucas_schleuss/vs$ code/voronoi_mesh_project/main.cpp || cmake_object_order_depends_target_voronoi_mesh_project
+build CMakeFiles/voronoi_mesh_project.dir/main.cpp.o: CXX_COMPILER__voronoi_mesh_project_unscanned_Release /Users/lucas_schleuss/vs$ code/voronoi_mesh_project/main.cpp || cmake_object_order_depends_target_voronoi_mesh_project
   DEP_FILE = CMakeFiles/voronoi_mesh_project.dir/main.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk
+  FLAGS = -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk
   OBJECT_DIR = CMakeFiles/voronoi_mesh_project.dir
   OBJECT_FILE_DIR = CMakeFiles/voronoi_mesh_project.dir
 
-build CMakeFiles/voronoi_mesh_project.dir/Point.cpp.o: CXX_COMPILER__voronoi_mesh_project_unscanned_Debug /Users/lucas_schleuss/vs$ code/voronoi_mesh_project/Point.cpp || cmake_object_order_depends_target_voronoi_mesh_project
+build CMakeFiles/voronoi_mesh_project.dir/Point.cpp.o: CXX_COMPILER__voronoi_mesh_project_unscanned_Release /Users/lucas_schleuss/vs$ code/voronoi_mesh_project/Point.cpp || cmake_object_order_depends_target_voronoi_mesh_project
   DEP_FILE = CMakeFiles/voronoi_mesh_project.dir/Point.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk
+  FLAGS = -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk
   OBJECT_DIR = CMakeFiles/voronoi_mesh_project.dir
   OBJECT_FILE_DIR = CMakeFiles/voronoi_mesh_project.dir
 
-build CMakeFiles/voronoi_mesh_project.dir/Halfplane.cpp.o: CXX_COMPILER__voronoi_mesh_project_unscanned_Debug /Users/lucas_schleuss/vs$ code/voronoi_mesh_project/Halfplane.cpp || cmake_object_order_depends_target_voronoi_mesh_project
+build CMakeFiles/voronoi_mesh_project.dir/Halfplane.cpp.o: CXX_COMPILER__voronoi_mesh_project_unscanned_Release /Users/lucas_schleuss/vs$ code/voronoi_mesh_project/Halfplane.cpp || cmake_object_order_depends_target_voronoi_mesh_project
   DEP_FILE = CMakeFiles/voronoi_mesh_project.dir/Halfplane.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk
+  FLAGS = -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk
   OBJECT_DIR = CMakeFiles/voronoi_mesh_project.dir
   OBJECT_FILE_DIR = CMakeFiles/voronoi_mesh_project.dir
 
-build CMakeFiles/voronoi_mesh_project.dir/VoronoiCell.cpp.o: CXX_COMPILER__voronoi_mesh_project_unscanned_Debug /Users/lucas_schleuss/vs$ code/voronoi_mesh_project/VoronoiCell.cpp || cmake_object_order_depends_target_voronoi_mesh_project
+build CMakeFiles/voronoi_mesh_project.dir/VoronoiCell.cpp.o: CXX_COMPILER__voronoi_mesh_project_unscanned_Release /Users/lucas_schleuss/vs$ code/voronoi_mesh_project/VoronoiCell.cpp || cmake_object_order_depends_target_voronoi_mesh_project
   DEP_FILE = CMakeFiles/voronoi_mesh_project.dir/VoronoiCell.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk
+  FLAGS = -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk
   OBJECT_DIR = CMakeFiles/voronoi_mesh_project.dir
   OBJECT_FILE_DIR = CMakeFiles/voronoi_mesh_project.dir
 
-build CMakeFiles/voronoi_mesh_project.dir/VoronoiMesh.cpp.o: CXX_COMPILER__voronoi_mesh_project_unscanned_Debug /Users/lucas_schleuss/vs$ code/voronoi_mesh_project/VoronoiMesh.cpp || cmake_object_order_depends_target_voronoi_mesh_project
+build CMakeFiles/voronoi_mesh_project.dir/VoronoiMesh.cpp.o: CXX_COMPILER__voronoi_mesh_project_unscanned_Release /Users/lucas_schleuss/vs$ code/voronoi_mesh_project/VoronoiMesh.cpp || cmake_object_order_depends_target_voronoi_mesh_project
   DEP_FILE = CMakeFiles/voronoi_mesh_project.dir/VoronoiMesh.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk
+  FLAGS = -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk
   OBJECT_DIR = CMakeFiles/voronoi_mesh_project.dir
   OBJECT_FILE_DIR = CMakeFiles/voronoi_mesh_project.dir
 
@@ -255,8 +255,8 @@ build CMakeFiles/voronoi_mesh_project.dir/VoronoiMesh.cpp.o: CXX_COMPILER__voron
 #############################################
 # Link the executable voronoi_mesh_project
 
-build voronoi_mesh_project: CXX_EXECUTABLE_LINKER__voronoi_mesh_project_Debug CMakeFiles/voronoi_mesh_project.dir/main.cpp.o CMakeFiles/voronoi_mesh_project.dir/Point.cpp.o CMakeFiles/voronoi_mesh_project.dir/Halfplane.cpp.o CMakeFiles/voronoi_mesh_project.dir/VoronoiCell.cpp.o CMakeFiles/voronoi_mesh_project.dir/VoronoiMesh.cpp.o
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk
+build voronoi_mesh_project: CXX_EXECUTABLE_LINKER__voronoi_mesh_project_Release CMakeFiles/voronoi_mesh_project.dir/main.cpp.o CMakeFiles/voronoi_mesh_project.dir/Point.cpp.o CMakeFiles/voronoi_mesh_project.dir/Halfplane.cpp.o CMakeFiles/voronoi_mesh_project.dir/VoronoiCell.cpp.o CMakeFiles/voronoi_mesh_project.dir/VoronoiMesh.cpp.o
+  FLAGS = -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk
   OBJECT_DIR = CMakeFiles/voronoi_mesh_project.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -268,7 +268,7 @@ build voronoi_mesh_project: CXX_EXECUTABLE_LINKER__voronoi_mesh_project_Debug CM
 # Utility command for package
 
 build CMakeFiles/package.util: CUSTOM_COMMAND all
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/cpack --config ./CPackConfig.cmake
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/cpack --config ./CPackConfig.cmake
   DESC = Run CPack packaging tool...
   pool = console
   restat = 1
@@ -280,7 +280,7 @@ build package: phony CMakeFiles/package.util
 # Utility command for package_source
 
 build CMakeFiles/package_source.util: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/cpack --config ./CPackSourceConfig.cmake /Users/lucas_schleuss/vs\ code/voronoi_mesh_project/build/CPackSourceConfig.cmake
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/cpack --config ./CPackSourceConfig.cmake /Users/lucas_schleuss/vs\ code/voronoi_mesh_project/build/CPackSourceConfig.cmake
   DESC = Run CPack packaging tool for source...
   pool = console
   restat = 1
@@ -292,7 +292,7 @@ build package_source: phony CMakeFiles/package_source.util
 # Utility command for test
 
 build CMakeFiles/test.util: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest --force-new-ctest-process
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest --force-new-ctest-process
   DESC = Running tests...
   pool = console
   restat = 1
@@ -316,7 +316,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/cmake --regenerate-during-build -S"/Users/lucas_schleuss/vs code/voronoi_mesh_project" -B"/Users/lucas_schleuss/vs code/voronoi_mesh_project/build"
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/cmake --regenerate-during-build -S"/Users/lucas_schleuss/vs code/voronoi_mesh_project" -B"/Users/lucas_schleuss/vs code/voronoi_mesh_project/build"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -328,7 +328,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # Custom command for CMakeFiles/Experimental
 
 build CMakeFiles/Experimental | ${cmake_ninja_workdir}CMakeFiles/Experimental: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D Experimental
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D Experimental
   pool = console
 
 
@@ -336,7 +336,7 @@ build CMakeFiles/Experimental | ${cmake_ninja_workdir}CMakeFiles/Experimental: C
 # Custom command for CMakeFiles/Nightly
 
 build CMakeFiles/Nightly | ${cmake_ninja_workdir}CMakeFiles/Nightly: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D Nightly
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D Nightly
   pool = console
 
 
@@ -344,7 +344,7 @@ build CMakeFiles/Nightly | ${cmake_ninja_workdir}CMakeFiles/Nightly: CUSTOM_COMM
 # Custom command for CMakeFiles/Continuous
 
 build CMakeFiles/Continuous | ${cmake_ninja_workdir}CMakeFiles/Continuous: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D Continuous
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D Continuous
   pool = console
 
 
@@ -352,7 +352,7 @@ build CMakeFiles/Continuous | ${cmake_ninja_workdir}CMakeFiles/Continuous: CUSTO
 # Custom command for CMakeFiles/NightlyMemoryCheck
 
 build CMakeFiles/NightlyMemoryCheck | ${cmake_ninja_workdir}CMakeFiles/NightlyMemoryCheck: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D NightlyMemoryCheck
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D NightlyMemoryCheck
   pool = console
 
 
@@ -360,7 +360,7 @@ build CMakeFiles/NightlyMemoryCheck | ${cmake_ninja_workdir}CMakeFiles/NightlyMe
 # Custom command for CMakeFiles/NightlyStart
 
 build CMakeFiles/NightlyStart | ${cmake_ninja_workdir}CMakeFiles/NightlyStart: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D NightlyStart
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D NightlyStart
   pool = console
 
 
@@ -368,7 +368,7 @@ build CMakeFiles/NightlyStart | ${cmake_ninja_workdir}CMakeFiles/NightlyStart: C
 # Custom command for CMakeFiles/NightlyUpdate
 
 build CMakeFiles/NightlyUpdate | ${cmake_ninja_workdir}CMakeFiles/NightlyUpdate: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D NightlyUpdate
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D NightlyUpdate
   pool = console
 
 
@@ -376,7 +376,7 @@ build CMakeFiles/NightlyUpdate | ${cmake_ninja_workdir}CMakeFiles/NightlyUpdate:
 # Custom command for CMakeFiles/NightlyConfigure
 
 build CMakeFiles/NightlyConfigure | ${cmake_ninja_workdir}CMakeFiles/NightlyConfigure: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D NightlyConfigure
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D NightlyConfigure
   pool = console
 
 
@@ -384,7 +384,7 @@ build CMakeFiles/NightlyConfigure | ${cmake_ninja_workdir}CMakeFiles/NightlyConf
 # Custom command for CMakeFiles/NightlyBuild
 
 build CMakeFiles/NightlyBuild | ${cmake_ninja_workdir}CMakeFiles/NightlyBuild: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D NightlyBuild
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D NightlyBuild
   pool = console
 
 
@@ -392,7 +392,7 @@ build CMakeFiles/NightlyBuild | ${cmake_ninja_workdir}CMakeFiles/NightlyBuild: C
 # Custom command for CMakeFiles/NightlyTest
 
 build CMakeFiles/NightlyTest | ${cmake_ninja_workdir}CMakeFiles/NightlyTest: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D NightlyTest
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D NightlyTest
   pool = console
 
 
@@ -400,7 +400,7 @@ build CMakeFiles/NightlyTest | ${cmake_ninja_workdir}CMakeFiles/NightlyTest: CUS
 # Custom command for CMakeFiles/NightlyCoverage
 
 build CMakeFiles/NightlyCoverage | ${cmake_ninja_workdir}CMakeFiles/NightlyCoverage: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D NightlyCoverage
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D NightlyCoverage
   pool = console
 
 
@@ -408,7 +408,7 @@ build CMakeFiles/NightlyCoverage | ${cmake_ninja_workdir}CMakeFiles/NightlyCover
 # Custom command for CMakeFiles/NightlyMemCheck
 
 build CMakeFiles/NightlyMemCheck | ${cmake_ninja_workdir}CMakeFiles/NightlyMemCheck: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D NightlyMemCheck
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D NightlyMemCheck
   pool = console
 
 
@@ -416,7 +416,7 @@ build CMakeFiles/NightlyMemCheck | ${cmake_ninja_workdir}CMakeFiles/NightlyMemCh
 # Custom command for CMakeFiles/NightlySubmit
 
 build CMakeFiles/NightlySubmit | ${cmake_ninja_workdir}CMakeFiles/NightlySubmit: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D NightlySubmit
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D NightlySubmit
   pool = console
 
 
@@ -424,7 +424,7 @@ build CMakeFiles/NightlySubmit | ${cmake_ninja_workdir}CMakeFiles/NightlySubmit:
 # Custom command for CMakeFiles/ExperimentalStart
 
 build CMakeFiles/ExperimentalStart | ${cmake_ninja_workdir}CMakeFiles/ExperimentalStart: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ExperimentalStart
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ExperimentalStart
   pool = console
 
 
@@ -432,7 +432,7 @@ build CMakeFiles/ExperimentalStart | ${cmake_ninja_workdir}CMakeFiles/Experiment
 # Custom command for CMakeFiles/ExperimentalUpdate
 
 build CMakeFiles/ExperimentalUpdate | ${cmake_ninja_workdir}CMakeFiles/ExperimentalUpdate: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ExperimentalUpdate
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ExperimentalUpdate
   pool = console
 
 
@@ -440,7 +440,7 @@ build CMakeFiles/ExperimentalUpdate | ${cmake_ninja_workdir}CMakeFiles/Experimen
 # Custom command for CMakeFiles/ExperimentalConfigure
 
 build CMakeFiles/ExperimentalConfigure | ${cmake_ninja_workdir}CMakeFiles/ExperimentalConfigure: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ExperimentalConfigure
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ExperimentalConfigure
   pool = console
 
 
@@ -448,7 +448,7 @@ build CMakeFiles/ExperimentalConfigure | ${cmake_ninja_workdir}CMakeFiles/Experi
 # Custom command for CMakeFiles/ExperimentalBuild
 
 build CMakeFiles/ExperimentalBuild | ${cmake_ninja_workdir}CMakeFiles/ExperimentalBuild: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ExperimentalBuild
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ExperimentalBuild
   pool = console
 
 
@@ -456,7 +456,7 @@ build CMakeFiles/ExperimentalBuild | ${cmake_ninja_workdir}CMakeFiles/Experiment
 # Custom command for CMakeFiles/ExperimentalTest
 
 build CMakeFiles/ExperimentalTest | ${cmake_ninja_workdir}CMakeFiles/ExperimentalTest: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ExperimentalTest
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ExperimentalTest
   pool = console
 
 
@@ -464,7 +464,7 @@ build CMakeFiles/ExperimentalTest | ${cmake_ninja_workdir}CMakeFiles/Experimenta
 # Custom command for CMakeFiles/ExperimentalCoverage
 
 build CMakeFiles/ExperimentalCoverage | ${cmake_ninja_workdir}CMakeFiles/ExperimentalCoverage: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ExperimentalCoverage
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ExperimentalCoverage
   pool = console
 
 
@@ -472,7 +472,7 @@ build CMakeFiles/ExperimentalCoverage | ${cmake_ninja_workdir}CMakeFiles/Experim
 # Custom command for CMakeFiles/ExperimentalMemCheck
 
 build CMakeFiles/ExperimentalMemCheck | ${cmake_ninja_workdir}CMakeFiles/ExperimentalMemCheck: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ExperimentalMemCheck
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ExperimentalMemCheck
   pool = console
 
 
@@ -480,7 +480,7 @@ build CMakeFiles/ExperimentalMemCheck | ${cmake_ninja_workdir}CMakeFiles/Experim
 # Custom command for CMakeFiles/ExperimentalSubmit
 
 build CMakeFiles/ExperimentalSubmit | ${cmake_ninja_workdir}CMakeFiles/ExperimentalSubmit: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ExperimentalSubmit
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ExperimentalSubmit
   pool = console
 
 
@@ -488,7 +488,7 @@ build CMakeFiles/ExperimentalSubmit | ${cmake_ninja_workdir}CMakeFiles/Experimen
 # Custom command for CMakeFiles/ContinuousStart
 
 build CMakeFiles/ContinuousStart | ${cmake_ninja_workdir}CMakeFiles/ContinuousStart: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ContinuousStart
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ContinuousStart
   pool = console
 
 
@@ -496,7 +496,7 @@ build CMakeFiles/ContinuousStart | ${cmake_ninja_workdir}CMakeFiles/ContinuousSt
 # Custom command for CMakeFiles/ContinuousUpdate
 
 build CMakeFiles/ContinuousUpdate | ${cmake_ninja_workdir}CMakeFiles/ContinuousUpdate: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ContinuousUpdate
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ContinuousUpdate
   pool = console
 
 
@@ -504,7 +504,7 @@ build CMakeFiles/ContinuousUpdate | ${cmake_ninja_workdir}CMakeFiles/ContinuousU
 # Custom command for CMakeFiles/ContinuousConfigure
 
 build CMakeFiles/ContinuousConfigure | ${cmake_ninja_workdir}CMakeFiles/ContinuousConfigure: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ContinuousConfigure
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ContinuousConfigure
   pool = console
 
 
@@ -512,7 +512,7 @@ build CMakeFiles/ContinuousConfigure | ${cmake_ninja_workdir}CMakeFiles/Continuo
 # Custom command for CMakeFiles/ContinuousBuild
 
 build CMakeFiles/ContinuousBuild | ${cmake_ninja_workdir}CMakeFiles/ContinuousBuild: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ContinuousBuild
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ContinuousBuild
   pool = console
 
 
@@ -520,7 +520,7 @@ build CMakeFiles/ContinuousBuild | ${cmake_ninja_workdir}CMakeFiles/ContinuousBu
 # Custom command for CMakeFiles/ContinuousTest
 
 build CMakeFiles/ContinuousTest | ${cmake_ninja_workdir}CMakeFiles/ContinuousTest: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ContinuousTest
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ContinuousTest
   pool = console
 
 
@@ -528,7 +528,7 @@ build CMakeFiles/ContinuousTest | ${cmake_ninja_workdir}CMakeFiles/ContinuousTes
 # Custom command for CMakeFiles/ContinuousCoverage
 
 build CMakeFiles/ContinuousCoverage | ${cmake_ninja_workdir}CMakeFiles/ContinuousCoverage: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ContinuousCoverage
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ContinuousCoverage
   pool = console
 
 
@@ -536,7 +536,7 @@ build CMakeFiles/ContinuousCoverage | ${cmake_ninja_workdir}CMakeFiles/Continuou
 # Custom command for CMakeFiles/ContinuousMemCheck
 
 build CMakeFiles/ContinuousMemCheck | ${cmake_ninja_workdir}CMakeFiles/ContinuousMemCheck: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ContinuousMemCheck
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ContinuousMemCheck
   pool = console
 
 
@@ -544,7 +544,7 @@ build CMakeFiles/ContinuousMemCheck | ${cmake_ninja_workdir}CMakeFiles/Continuou
 # Custom command for CMakeFiles/ContinuousSubmit
 
 build CMakeFiles/ContinuousSubmit | ${cmake_ninja_workdir}CMakeFiles/ContinuousSubmit: CUSTOM_COMMAND
-  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.7/bin/ctest -D ContinuousSubmit
+  COMMAND = cd "/Users/lucas_schleuss/vs code/voronoi_mesh_project/build" && /opt/homebrew/Cellar/cmake/3.27.8/bin/ctest -D ContinuousSubmit
   pool = console
 
 # =============================================================================
@@ -572,14 +572,14 @@ build all: phony voronoi_mesh_project
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /Users/lucas_schleuss/vs$ code/voronoi_mesh_project/CMakeLists.txt /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCInformation.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCXXInformation.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCommonLanguageInclude.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeGenericSystem.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeInitializeConfigs.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeLanguageInformation.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CPack.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CPackComponent.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CTest.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CTestTargets.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CTestUseLaunchers.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Compiler/AppleClang-C.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Compiler/AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Compiler/Clang.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Compiler/GNU.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/DartConfiguration.tcl.in /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/Apple-AppleClang-C.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/Apple-AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/Apple-Clang-C.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/Apple-Clang-CXX.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/Apple-Clang.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/Darwin-Initialize.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/Darwin.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/UnixPaths.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Templates/CPackConfig.cmake.in CMakeCache.txt CMakeFiles/3.27.7/CMakeCCompiler.cmake CMakeFiles/3.27.7/CMakeCXXCompiler.cmake CMakeFiles/3.27.7/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /Users/lucas_schleuss/vs$ code/voronoi_mesh_project/CMakeLists.txt /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeCInformation.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeCXXInformation.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeCommonLanguageInclude.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeGenericSystem.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeInitializeConfigs.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeLanguageInformation.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CPack.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CPackComponent.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CTest.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CTestTargets.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CTestUseLaunchers.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Compiler/AppleClang-C.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Compiler/AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Compiler/Clang.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Compiler/GNU.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/DartConfiguration.tcl.in /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/Apple-AppleClang-C.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/Apple-AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/Apple-Clang-C.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/Apple-Clang-CXX.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/Apple-Clang.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/Darwin-Initialize.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/Darwin.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/UnixPaths.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Templates/CPackConfig.cmake.in CMakeCache.txt CMakeFiles/3.27.8/CMakeCCompiler.cmake CMakeFiles/3.27.8/CMakeCXXCompiler.cmake CMakeFiles/3.27.8/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /Users/lucas_schleuss/vs$ code/voronoi_mesh_project/CMakeLists.txt /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCInformation.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCXXInformation.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCommonLanguageInclude.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeGenericSystem.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeInitializeConfigs.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeLanguageInformation.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CPack.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CPackComponent.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CTest.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CTestTargets.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CTestUseLaunchers.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Compiler/AppleClang-C.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Compiler/AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Compiler/Clang.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Compiler/GNU.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/DartConfiguration.tcl.in /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/Apple-AppleClang-C.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/Apple-AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/Apple-Clang-C.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/Apple-Clang-CXX.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/Apple-Clang.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/Darwin-Initialize.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/Darwin.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/Platform/UnixPaths.cmake /opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Templates/CPackConfig.cmake.in CMakeCache.txt CMakeFiles/3.27.7/CMakeCCompiler.cmake CMakeFiles/3.27.7/CMakeCXXCompiler.cmake CMakeFiles/3.27.7/CMakeSystem.cmake: phony
+build /Users/lucas_schleuss/vs$ code/voronoi_mesh_project/CMakeLists.txt /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeCInformation.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeCXXInformation.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeCommonLanguageInclude.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeGenericSystem.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeInitializeConfigs.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeLanguageInformation.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CPack.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CPackComponent.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CTest.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CTestTargets.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/CTestUseLaunchers.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Compiler/AppleClang-C.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Compiler/AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Compiler/Clang.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Compiler/GNU.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/DartConfiguration.tcl.in /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/Apple-AppleClang-C.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/Apple-AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/Apple-Clang-C.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/Apple-Clang-CXX.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/Apple-Clang.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/Darwin-Initialize.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/Darwin.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Modules/Platform/UnixPaths.cmake /opt/homebrew/Cellar/cmake/3.27.8/share/cmake/Templates/CPackConfig.cmake.in CMakeCache.txt CMakeFiles/3.27.8/CMakeCCompiler.cmake CMakeFiles/3.27.8/CMakeCXXCompiler.cmake CMakeFiles/3.27.8/CMakeSystem.cmake: phony
 
 
 #############################################

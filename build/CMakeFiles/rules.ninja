@@ -7,14 +7,14 @@
 
 # =============================================================================
 # Project: voronoi_mesh_project
-# Configurations: Debug
+# Configurations: Release
 # =============================================================================
 # =============================================================================
 
 #############################################
 # Rule for compiling CXX files.
 
-rule CXX_COMPILER__voronoi_mesh_project_unscanned_Debug
+rule CXX_COMPILER__voronoi_mesh_project_unscanned_Release
   depfile = $DEP_FILE
   deps = gcc
   command = ${LAUNCHER}${CODE_CHECK}/usr/bin/clang++ $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -24,7 +24,7 @@ rule CXX_COMPILER__voronoi_mesh_project_unscanned_Debug
 #############################################
 # Rule for linking CXX executable.
 
-rule CXX_EXECUTABLE_LINKER__voronoi_mesh_project_Debug
+rule CXX_EXECUTABLE_LINKER__voronoi_mesh_project_Release
   command = $PRE_LINK && /usr/bin/clang++ $FLAGS -Wl,-search_paths_first -Wl,-headerpad_max_install_names $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT
@@ -42,7 +42,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /opt/homebrew/Cellar/cmake/3.27.7/bin/cmake --regenerate-during-build -S"/Users/lucas_schleuss/vs code/voronoi_mesh_project" -B"/Users/lucas_schleuss/vs code/voronoi_mesh_project/build"
+  command = /opt/homebrew/Cellar/cmake/3.27.8/bin/cmake --regenerate-during-build -S"/Users/lucas_schleuss/vs code/voronoi_mesh_project" -B"/Users/lucas_schleuss/vs code/voronoi_mesh_project/build"
   description = Re-running CMake...
   generator = 1
 

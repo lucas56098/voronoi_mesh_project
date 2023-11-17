@@ -27,7 +27,7 @@ SubmitInactivityTimeout:
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/opt/homebrew/Cellar/cmake/3.27.7/bin/cmake" "/Users/lucas_schleuss/vs code/voronoi_mesh_project"
+ConfigureCommand: "/opt/homebrew/Cellar/cmake/3.27.8/bin/cmake" "/Users/lucas_schleuss/vs code/voronoi_mesh_project"
 MakeCommand: /opt/homebrew/Cellar/cmake/3.27.7/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}"
 DefaultCTestConfigurationType: Release
 
