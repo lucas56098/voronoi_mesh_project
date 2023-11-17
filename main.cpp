@@ -43,7 +43,7 @@ void generate_animation_files() {
     
     // generate points for mesh
         
-    int N_seeds = 150;
+    int N_seeds = 30;
     Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
 
     Point* vel = generate_seed_points(N_seeds, true, -1, 1, 38);

@@ -7,4 +7,4 @@ Small C++ Project to generate a voronoi mesh in the most naive way possible. Sti
 - Data Export to Python for Visualisation
 - Other algorithms and comparison...
 
-![til](./voronoi_animation.gif)
+![til](./example_voronoi_animation.gif)
