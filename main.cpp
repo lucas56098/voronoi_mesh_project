@@ -134,10 +134,10 @@ void do_benchmarking(string output_file, vector<int> seedvalues, bool append) {
 // generates points, will generate mesh, stop time and do tests
 int main () {
 
-// MAIN : generate voronoi mesh for given seed number and stop time for that
+// MAIN : generate voronoi mesh for given seed number and stop time for that -------------------------------------
 
     // generate seeds for mesh
-    int N_seeds = 3;
+    int N_seeds = 20;
     Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
     
     // Get the current time point before the code execution
@@ -160,17 +160,15 @@ int main () {
     vmesh.save_mesh_to_files(0);
 
 
-// OPTIONAL : do correctness checks
+
+// OPTIONAL : do correctness checks ------------------------------------------------------------------------------
 
     // check mesh for correctness
     bool tests = vmesh.check_mesh();
-
     cout << "all tests: " << boolalpha << tests << endl;
-
-
     
 
-// OPTIONAL : do benchmarking for some seeds
+// OPTIONAL : do benchmarking for some seeds ---------------------------------------------------------------------
     /*
     
     // choose seed numbers for which the benchmarking should be done
@@ -192,7 +190,7 @@ int main () {
     
     */
 
-// OPTIONAL : generate animation for a moving mesh1
+// OPTIONAL : generate animation for a moving mesh1 --------------------------------------------------------------
 
     /*
 

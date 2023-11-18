@@ -17,6 +17,7 @@ public:
     void save_mesh_to_files(int nr);
     bool check_equidistance();
     double check_area();
+    bool check_neighbours();
     bool check_mesh();
 private:
 

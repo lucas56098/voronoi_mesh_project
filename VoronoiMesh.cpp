@@ -135,19 +135,70 @@ double VoronoiMesh::check_area() {
 
 }
 
-// check some conditions for mesh -> for conditions look at VoronoiCell::check_cell()
+// check that all neighbours know each other
+bool VoronoiMesh::check_neighbours() {
+
+    bool all_neighbours_known = false;
+
+    int nr_of_known_neighbours = 0;
+    int nr_of_checked_edges = 0;
+
+    for (int i = 0; i < vcells.size(); i++) {
+        for (int j = 0; j < vcells[i].edges.size(); j++) {
+            double x_1 = vcells[i].edges[j].seed2.x;
+            double y_1 = vcells[i].edges[j].seed2.y;
+
+            if (vcells[i].edges[j].boundary == false) {
+                nr_of_checked_edges += 1;
+            }
+
+            for (int k = 0; k < vcells.size(); k++) {
+                if (vcells[k].seed.x == x_1 && vcells[k].seed.y == y_1) {
+                    for (int l = 0; l < vcells[k].edges.size(); l++) {
+                        if (vcells[k].edges[l].seed2.x == vcells[i].seed.x && vcells[k].edges[l].seed2.y == vcells[i].seed.y) {
+                            nr_of_known_neighbours += 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (nr_of_checked_edges == nr_of_known_neighbours) {
+        all_neighbours_known = true;
+    }
+
+    return all_neighbours_known;
+}
+
+// check some conditions for mesh
 bool VoronoiMesh::check_mesh() {
 
     bool correct_mesh = true;
 
-    // first check
+    // first check : equidistance
+    bool equidist = true;
     if (!check_equidistance()) {
         correct_mesh = false;
+        equidist = false;
     }
-    cout << "equidistance condition: " << boolalpha << correct_mesh << endl;
-    cout << "total area = " << check_area() << endl;
+    cout << "equidistance condition: " << boolalpha << equidist << endl;
+    
+    // second check : area
+    double total_area = check_area();
+    cout << "total area = " << total_area << endl;
+    if (total_area != 1) {
+        correct_mesh = false;
+    }
 
-    // possible futher checks here
+    // third check : neighbours
+
+    bool neighbour = true;
+    if (!check_neighbours()) {
+        correct_mesh = false;
+        neighbour = false;
+    }
+    cout << "neighbour condition: " << boolalpha << neighbour << endl;
 
     // return total check outcome
     return correct_mesh;
