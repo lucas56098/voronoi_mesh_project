@@ -10,7 +10,7 @@ VoronoiMesh::VoronoiMesh(Point* points, int N_seeds) {
 
 VoronoiMesh::~VoronoiMesh() {}
 
-
+// construct all cells
 void VoronoiMesh::construct_mesh() {
 
     // loop through all seeds to generate individual cells
@@ -38,6 +38,7 @@ void VoronoiMesh::construct_mesh() {
 
 }
 
+// save the mesh to files (seedfile, edgefile, vertexfile)
 void VoronoiMesh::save_mesh_to_files(int nr) {
 
     // save seeds to file
@@ -100,4 +101,54 @@ void VoronoiMesh::save_mesh_to_files(int nr) {
 
     edge_list.close();
 
+}
+
+// check equidistance
+bool VoronoiMesh::check_equidistance() {
+    bool correct_mesh = true;
+
+    // check every cell individually
+    for (int i = 0; i < vcells.size(); i++) {
+
+        // check cell for its conditions
+        bool correct_cell = vcells[i].check_equidistance_condition(pts);
+
+        // if a single cell is false the mesh is also false
+        if (!correct_cell) {
+            correct_mesh = false;
+        }
+    }
+
+    return correct_mesh;
+}
+
+// add up areas of all cells
+double VoronoiMesh::check_area() {
+
+    double total_area = 0;
+
+    for (int i = 0; i < vcells.size(); i++) {
+        total_area += vcells[i].get_area();
+    }
+
+    return total_area;
+
+}
+
+// check some conditions for mesh -> for conditions look at VoronoiCell::check_cell()
+bool VoronoiMesh::check_mesh() {
+
+    bool correct_mesh = true;
+
+    // first check
+    if (!check_equidistance()) {
+        correct_mesh = false;
+    }
+    cout << "equidistance condition: " << boolalpha << correct_mesh << endl;
+    cout << "total area = " << check_area() << endl;
+
+    // possible futher checks here
+
+    // return total check outcome
+    return correct_mesh;
 }

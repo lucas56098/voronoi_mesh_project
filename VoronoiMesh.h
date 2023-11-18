@@ -15,6 +15,9 @@ public:
     int N;
     void construct_mesh();
     void save_mesh_to_files(int nr);
+    bool check_equidistance();
+    double check_area();
+    bool check_mesh();
 private:
 
 };

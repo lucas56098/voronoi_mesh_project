@@ -22,6 +22,8 @@ public:
     void intersect_two_halfplanes(Halfplane &hp1, Halfplane &hp2);
     void construct_cell();
     void print_cell();
+    bool check_equidistance_condition(Point* seeds);
+    double get_area();
 private:
     void generate_halfplane_vector();
     void search_hp_closest_to_seed(Halfplane &first_hp);

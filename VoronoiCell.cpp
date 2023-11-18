@@ -96,8 +96,9 @@ void VoronoiCell::generate_halfplane_vector() {
     }
 }
 
+// search for closest point
 void VoronoiCell::search_hp_closest_to_seed(Halfplane &first_hp) {
-    // search for closest point
+
     double dist_min = 42;
 
     for (int i = 0; i<N+3; i++) {
@@ -110,6 +111,7 @@ void VoronoiCell::search_hp_closest_to_seed(Halfplane &first_hp) {
     }
 }
 
+// get the signed angle between two vectors (signed means angle from -180deg to +180deg continously, + == right)
 double VoronoiCell::get_signed_angle(Point u, Point v) {
     double dotp = u.x * v.x + u.y * v.y;
     double crossp = v.x*u.y - v.y*u.x;
@@ -126,6 +128,7 @@ double VoronoiCell::get_signed_angle(Point u, Point v) {
     return angle;
 }
 
+// algorithm to construct the cell
 void VoronoiCell::construct_cell() {
 
     // generate and intersect all halfplanes
@@ -219,8 +222,8 @@ void VoronoiCell::construct_cell() {
 
 }
 
+// print out edges and vertices of cell
 void VoronoiCell::print_cell() {
-    // print out edges and vertices of cell
     cout << "Cell parameters:" << endl;
     cout << "Seed1: " << seed.x << ":" << seed.y << endl;
 
@@ -228,4 +231,71 @@ void VoronoiCell::print_cell() {
         cout << "Edge Seed2: " << edges[i].seed2.x << ":" << edges[i].seed2.y << endl;
         cout << "Vertex: " << verticies[i].x << ":" << verticies[i].y << endl;
     }
+}
+
+// check all vertecies of the cell for equidistance conditions
+bool VoronoiCell::check_equidistance_condition(Point* seeds) {
+
+    bool correct_cell = true;
+
+    // check if every vertex has at least three equidistant points
+    for (int i = 0; i < verticies.size(); i++) {
+
+        // only check vertex if it is not on boundary within error margin
+        bool condition = verticies[i].x > 0.00001 && verticies[i].y > 0.00001 && verticies[i].x < 0.99999 && verticies[i].y < 0.99999;
+
+        if (condition) {
+
+            int nr_equidist_pts = 0;
+
+            double min_dist = 42;
+
+            // determine minimum distance
+            for (int j = 0; j < N; j++) {
+
+                // calc distance between seed and vertex
+                double dist = sqrt((seeds[j].x - verticies[i].x)*(seeds[j].x - verticies[i].x) +
+                                    (seeds[j].y - verticies[i].y)*(seeds[j].y - verticies[i].y));
+
+                if (dist < min_dist) {
+                    min_dist = dist;
+                }
+            }
+
+            // search for seeds with minimum distance
+            for (int j = 0; j < N; j++) {
+
+                // calc distance between seed and vertex
+                double dist = sqrt((seeds[j].x - verticies[i].x)*(seeds[j].x - verticies[i].x) +
+                                    (seeds[j].y - verticies[i].y)*(seeds[j].y - verticies[i].y));
+
+
+                // if seed has minimum distance add to equidistant points nr
+                if (min_dist - 0.00001 < dist && dist < min_dist + 0.00001) {
+                    nr_equidist_pts += 1;
+                }
+            }
+
+            // check equidistance condition (= all vertecies not on boundary must have at least three equidistant seeds)
+            if (nr_equidist_pts < 3) {
+                correct_cell = false;
+            }
+
+        }
+
+    }
+
+    return correct_cell;
+}
+
+// function to calculate the area of the voronoi cell 
+double VoronoiCell::get_area() {
+
+    double area = 0;
+
+    for (int i = 0; i < verticies.size(); i++) {
+        area += -0.5 * ((verticies[i].y + verticies[(i+1)%(verticies.size())].y) * 
+                       (verticies[i].x - verticies[(i+1)%(verticies.size())].x));
+    }
+    return area;
 }

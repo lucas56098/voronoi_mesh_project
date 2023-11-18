@@ -137,7 +137,7 @@ int main () {
 // MAIN : generate voronoi mesh for given seed number and stop time for that
 
     // generate seeds for mesh
-    int N_seeds = 100;
+    int N_seeds = 3;
     Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
     
     // Get the current time point before the code execution
@@ -159,6 +159,16 @@ int main () {
     // save mesh to file
     vmesh.save_mesh_to_files(0);
 
+
+// OPTIONAL : do correctness checks
+
+    // check mesh for correctness
+    bool tests = vmesh.check_mesh();
+
+    cout << "all tests: " << boolalpha << tests << endl;
+
+
+    
 
 // OPTIONAL : do benchmarking for some seeds
     /*
@@ -184,11 +194,11 @@ int main () {
 
 // OPTIONAL : generate animation for a moving mesh1
 
-    /**/
+    /*
 
     generate_animation_files(300, 30);
 
-    /**/
+    */
 
     cout << "done" << endl;
     
