@@ -137,7 +137,7 @@ int main () {
 // MAIN : generate voronoi mesh for given seed number and stop time for that -------------------------------------
 
     // generate seeds for mesh
-    int N_seeds = 20;
+    int N_seeds = 10;
     Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
     
     // Get the current time point before the code execution
@@ -169,26 +169,28 @@ int main () {
     
 
 // OPTIONAL : do benchmarking for some seeds ---------------------------------------------------------------------
-    /*
+    
     
     // choose seed numbers for which the benchmarking should be done
     vector<int> seedvals;
-    seedvals.push_back(1);
-    seedvals.push_back(10);
-    seedvals.push_back(30);
-    seedvals.push_back(50);
-    seedvals.push_back(100);
-    seedvals.push_back(200);
-    seedvals.push_back(300);
+    //seedvals.push_back(1);
+    //seedvals.push_back(10);
+    //seedvals.push_back(30);
+    //seedvals.push_back(50);
+    //seedvals.push_back(100);
+    //seedvals.push_back(200);
+    //seedvals.push_back(300);
+    //seedvals.push_back(500);
     //seedvals.push_back(1000);
+    seedvals.push_back(2000);
 
     // name output file
-    string output = "times_release.csv";
+    string output = "times_release_memory_opt.csv";
 
     // do the benchmarking
     do_benchmarking(output, seedvals, true);  // true or false: append or new file
     
-    */
+    
 
 // OPTIONAL : generate animation for a moving mesh1 --------------------------------------------------------------
 

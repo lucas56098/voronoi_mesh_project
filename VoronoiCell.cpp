@@ -10,6 +10,7 @@ VoronoiCell::VoronoiCell() {}
 
 VoronoiCell::VoronoiCell(Point inseed, Point* in_other_points, int N_pts) {
     seed = inseed;
+    other_points = new Point[N_pts];
     other_points = in_other_points;
     N = N_pts;
 }
@@ -219,6 +220,10 @@ void VoronoiCell::construct_cell() {
 
     // continue with the steps above until the half plane is the same as the first one
     } while (!(first_hp.seed2.x == current_hp.seed2.x && first_hp.seed2.y == current_hp.seed2.y));
+
+    // some memory management
+    halfplanes.clear();
+    delete[] other_points;
 
 }
 
