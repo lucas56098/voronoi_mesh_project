@@ -3,6 +3,10 @@
 #include "Point.h"
 #include "VoronoiMesh.h"
 #include <chrono>
+#include <string>
+#include <vector>
+#include <fstream>
+
 //#include "Halfplane.h"
 //#include "VoronoiCell.h"
 //using namespace std;
@@ -40,15 +44,15 @@ Point* generate_seed_points(int N, bool fixed_random_seed, int min, int max, int
 }
 
 // generates moving mesh and stores it frame by frame in files
-void generate_animation_files() {
+void generate_animation_files(int frames, int seeds) {
     
     // generate initial points and velocities for mesh
-    int N_seeds = 30;
+    int N_seeds = seeds;
     Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
     Point* vel = generate_seed_points(N_seeds, true, -1, 1, 38);
 
     // for each frame generate mesh and store it in files
-    for (int i = 0; i < 300; i++) {
+    for (int i = 0; i < frames; i++) {
         
         // update all particles positions
         for (int j = 0; j < N_seeds; j++) {
@@ -68,7 +72,6 @@ void generate_animation_files() {
             }
 
         }
-        
 
         // construct mesh
         VoronoiMesh vmesh(pts, N_seeds);
@@ -80,8 +83,58 @@ void generate_animation_files() {
 
 }
 
+// function to benchmark the mesh generation algorithm, saves times in csv
+void do_benchmarking(string output_file, vector<int> seedvalues, bool append) {
+
+    ofstream timing_list;
+
+    // append to file or create new file
+    if (append) {
+        timing_list =  ofstream(output_file, ios::app);
+    } else {
+        timing_list = ofstream(output_file);
+        timing_list << "nr_seeds,time_in_microseconds\n";
+    }
+
+    cout << "Start Benchmarking" << endl;
+
+    // do benchmark for each seedvalue size
+    for (int i = 0; i < seedvalues.size(); i++) {
+        
+        // generate seeds for mesh
+        int N_seeds = seedvalues[i];
+        Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
+    
+        // get current time point
+        chrono::high_resolution_clock::time_point start_time = chrono::high_resolution_clock::now();
+
+        // construct mesh
+        VoronoiMesh vmesh(pts, N_seeds);
+        vmesh.construct_mesh();
+
+        // get current time point
+        chrono::high_resolution_clock::time_point end_time = chrono::high_resolution_clock::now();
+
+        // calculate duration of the code execution
+        chrono::microseconds duration = chrono::duration_cast<chrono::microseconds>(end_time - start_time);
+
+        // save to file
+        timing_list << N_seeds << "," << duration.count() << "\n";
+
+        // output the duration in microseconds
+        cout << "Seeds: " << N_seeds << "  Execution time: " << duration.count() << " microseconds" << endl;
+    }
+
+    timing_list.close();
+
+    cout << "Benchmarking done" << endl;
+
+}
+
 // generates points, will generate mesh, stop time and do tests
 int main () {
+
+// MAIN : generate voronoi mesh for given seed number and stop time for that
 
     // generate seeds for mesh
     int N_seeds = 100;
@@ -107,8 +160,35 @@ int main () {
     vmesh.save_mesh_to_files(0);
 
 
-    // generate animation for a moving mesh
-    generate_animation_files();
+// OPTIONAL : do benchmarking for some seeds
+    /*
+    
+    // choose seed numbers for which the benchmarking should be done
+    vector<int> seedvals;
+    seedvals.push_back(1);
+    seedvals.push_back(10);
+    seedvals.push_back(30);
+    seedvals.push_back(50);
+    seedvals.push_back(100);
+    seedvals.push_back(200);
+    seedvals.push_back(300);
+    //seedvals.push_back(1000);
+
+    // name output file
+    string output = "times_release.csv";
+
+    // do the benchmarking
+    do_benchmarking(output, seedvals, true);  // true or false: append or new file
+    
+    */
+
+// OPTIONAL : generate animation for a moving mesh1
+
+    /**/
+
+    generate_animation_files(300, 30);
+
+    /**/
 
     cout << "done" << endl;
     
