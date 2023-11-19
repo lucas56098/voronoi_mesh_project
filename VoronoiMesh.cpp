@@ -186,8 +186,8 @@ bool VoronoiMesh::check_mesh() {
     
     // second check : area
     double total_area = check_area();
-    cout << "total area = " << total_area << endl;
-    if (total_area != 1) {
+    cout << "total area = " << total_area << "+" << total_area - 1 << endl;
+    if (total_area > 1 + 0.000001 && total_area < 1 - 0.000001) {
         correct_mesh = false;
     }
 

@@ -19,7 +19,7 @@ VoronoiCell::~VoronoiCell() {}
 
 // intersect two halfplanes, add that intersection to the first halfplane
 void VoronoiCell::intersect_two_halfplanes(Halfplane &hp1, Halfplane &hp2) {
-    
+
     // for the two halfplanes get vector representation
     Point midpoint1 = hp1.get_midpoint();
     Point midpoint2 = hp2.get_midpoint();
@@ -82,6 +82,7 @@ void VoronoiCell::intersect_all_halfplanes() {
         }
     }
 }
+
 // generate all halfplanes + boundary halfplanes
 void VoronoiCell::generate_halfplane_vector() {
     
@@ -134,7 +135,7 @@ void VoronoiCell::construct_cell() {
 
     // generate and intersect all halfplanes
     generate_halfplane_vector();
-    intersect_all_halfplanes();
+    //intersect_all_halfplanes();
 
     // set first and current_hp to hp closest to seed
     Halfplane current_hp;
@@ -145,6 +146,7 @@ void VoronoiCell::construct_cell() {
     // intitalize last_vertex  for the first time
     Point last_vertex = current_hp.get_midpoint();
 
+    int counter = 0;
     // step by step generate voronoi cell
     do {
 
@@ -156,6 +158,13 @@ void VoronoiCell::construct_cell() {
     Halfplane next_hp;
     Point vertex;
     bool need_to_check_for_degeneracy = false;
+
+    //intersect halfplanes for current_hp
+    for (int j = 0; j<N+3; j++) {
+            if (!(current_hp.seed2.x == halfplanes[j].seed2.x && current_hp.seed2.y == halfplanes[j].seed2.y)) {
+                intersect_two_halfplanes(current_hp, halfplanes[j]);
+            }
+        }
 
     // find intersection with smallest positive signed distance to last_vertex
     for (int i = 0; i<current_hp.intersections.size(); i++) {
@@ -176,8 +185,11 @@ void VoronoiCell::construct_cell() {
             smallest_pos_dist = rel_dist;
             next_hp = *current_hp.intersections[i].intersecting_with;
             vertex = current_hp.intersections[i].intersect_pt;
+
+        
         }
     }
+     
     // if degeneracy possible check for it and choose the correct halfplane
     if (need_to_check_for_degeneracy) {
         vector<Halfplane> deg_hp_list;
@@ -214,12 +226,21 @@ void VoronoiCell::construct_cell() {
 
     last_vertex_seed_2 = Point(current_hp.seed2.x, current_hp.seed2.y);
 
+    // remove all not needed intersections from memory
+    current_hp.intersections.clear();
+
     // update last vertex and current hp
     last_vertex = vertex;
     current_hp = next_hp;
+    counter += 1;
 
     // continue with the steps above until the half plane is the same as the first one
-    } while (!(first_hp.seed2.x == current_hp.seed2.x && first_hp.seed2.y == current_hp.seed2.y));
+
+    } while (!(first_hp.seed2.x == current_hp.seed2.x && first_hp.seed2.y == current_hp.seed2.y) && (10000 > counter));
+
+    if (counter >= 10000) {
+        cout << "failed to generate cell" << endl;
+    }
 
     // some memory management
     halfplanes.clear();
