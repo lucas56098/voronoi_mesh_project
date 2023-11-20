@@ -1,6 +1,6 @@
 #include "VoronoiCell.h"
 #include "Point.h"
-#include <vector>
+#include <deque>
 
 #ifndef VoronoiMesh_h
 #define VoronoiMesh_h
@@ -11,7 +11,7 @@ public:
     VoronoiMesh(Point* points, int N_seeds);
     ~VoronoiMesh();
     Point * pts;
-    vector<VoronoiCell> vcells;
+    deque<VoronoiCell> vcells;
     int N;
     void construct_mesh();
     void save_mesh_to_files(int nr);

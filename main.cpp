@@ -140,7 +140,7 @@ int main () {
 // MAIN : generate voronoi mesh for given seed number and stop time for that -------------------------------------
 
     // generate seeds for mesh
-    int N_seeds = 500;
+    int N_seeds = 1000;
     Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
     
     // Get the current time point before the code execution
@@ -173,27 +173,37 @@ int main () {
 
 // OPTIONAL : do benchmarking for some seeds ---------------------------------------------------------------------
     
+    /*
 
     // choose seed numbers for which the benchmarking should be done
     vector<int> seedvals;
-    seedvals.push_back(1);
-    seedvals.push_back(10);
-    seedvals.push_back(30);
-    seedvals.push_back(50);
-    seedvals.push_back(100);
-    seedvals.push_back(200);
-    seedvals.push_back(300);
-    seedvals.push_back(500);
-    seedvals.push_back(1000);
-    seedvals.push_back(3000);
-    seedvals.push_back(5000);
-    seedvals.push_back(10000);
+    //seedvals.push_back(1);
+    //seedvals.push_back(10);
+    //seedvals.push_back(30);
+    //seedvals.push_back(50);
+    //seedvals.push_back(100);
+    //seedvals.push_back(200);
+    //seedvals.push_back(300);
+    //seedvals.push_back(500);
+    //seedvals.push_back(1000);
+    //seedvals.push_back(3000);
+    //seedvals.push_back(5000);
+    //seedvals.push_back(10000);
+    //seedvals.push_back(11000);
+    //seedvals.push_back(12000);
+    //seedvals.push_back(13000);
+    //seedvals.push_back(14000);
+
+    // -> doesnt work zhs:killed (how do i solve this?)
+    //seedvals.push_back(15000);
 
     // name output file
-    string output = "times_new_algorithm.csv";
+    string output = "times_new_algorithm2.csv";
 
     // do the benchmarking
     do_benchmarking(output, seedvals, false);  // true or false: append or new file
+    
+    */
     
     
 
@@ -201,7 +211,7 @@ int main () {
 
     /*
 
-    generate_animation_files(300, 30);
+    generate_animation_files(300, 1000);
 
     */
 
