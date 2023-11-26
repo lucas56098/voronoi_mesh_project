@@ -11,8 +11,8 @@ public:
     VoronoiMesh(Point* points, int N_seeds);
     ~VoronoiMesh();
     Point * pts;
-    deque<VoronoiCell> vcells;
     int N;
+    deque<VoronoiCell> vcells;
     void construct_mesh();
     void save_mesh_to_files(int nr);
     bool check_equidistance();

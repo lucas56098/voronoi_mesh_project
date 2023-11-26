@@ -121,6 +121,8 @@ void do_benchmarking(string output_file, vector<int> seedvalues, bool append) {
         // save to file
         timing_list << N_seeds << "," << duration.count() << "\n";
 
+        cout << i << " ->";
+
         // output the duration in microseconds
         cout << "Seeds: " << N_seeds << "  Execution time: " << duration.count() << " microseconds" << endl;
 
@@ -140,7 +142,7 @@ int main () {
 // MAIN : generate voronoi mesh for given seed number and stop time for that -------------------------------------
 
     // generate seeds for mesh
-    int N_seeds = 1000;
+    int N_seeds = 10000;
     Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
     
     // Get the current time point before the code execution
@@ -177,41 +179,40 @@ int main () {
 
     // choose seed numbers for which the benchmarking should be done
     vector<int> seedvals;
-    //seedvals.push_back(1);
-    //seedvals.push_back(10);
-    //seedvals.push_back(30);
-    //seedvals.push_back(50);
-    //seedvals.push_back(100);
-    //seedvals.push_back(200);
-    //seedvals.push_back(300);
-    //seedvals.push_back(500);
-    //seedvals.push_back(1000);
-    //seedvals.push_back(3000);
-    //seedvals.push_back(5000);
-    //seedvals.push_back(10000);
-    //seedvals.push_back(11000);
-    //seedvals.push_back(12000);
-    //seedvals.push_back(13000);
-    //seedvals.push_back(14000);
-
-    // -> doesnt work zhs:killed (how do i solve this?)
-    //seedvals.push_back(15000);
+    seedvals.push_back(1);
+    seedvals.push_back(10);
+    seedvals.push_back(30);
+    seedvals.push_back(50);
+    seedvals.push_back(100);
+    seedvals.push_back(200);
+    seedvals.push_back(300);
+    seedvals.push_back(500);
+    seedvals.push_back(1000);
+    seedvals.push_back(3000);
+    seedvals.push_back(5000);
+    seedvals.push_back(10000);
+    seedvals.push_back(15000);
+    seedvals.push_back(20000);
+    //seedvals.push_back(30000);
+    //seedvals.push_back(100000);
+    //for (int i = 0; i< 30; i++) {
+    //    seedvals.push_back(14000);
+    //}
 
     // name output file
-    string output = "times_new_algorithm2.csv";
+    string output = "times_leakage_test2.csv";
 
     // do the benchmarking
     do_benchmarking(output, seedvals, false);  // true or false: append or new file
     
     */
     
-    
 
 // OPTIONAL : generate animation for a moving mesh1 --------------------------------------------------------------
 
     /*
 
-    generate_animation_files(300, 1000);
+    generate_animation_files(30, 3);
 
     */
 

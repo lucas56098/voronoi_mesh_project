@@ -5,29 +5,20 @@ using namespace std;
 #ifndef Halfplane_h
 #define Halfplane_h
 
-class Halfplane;
-
-struct intersection
-    {
-        Point intersect_pt;
-        Halfplane* intersecting_with;
-        double dist_to_midpoint; //distance signed relative to half_plane_vec
-    };
-
 class Halfplane {
 
 public:
     Halfplane();
-    Halfplane(Point inseed1, Point inseed2, int N_pts);
-    Halfplane(Point inseed1, Point inseed2, int N_pts, bool is_boundary);
+    Halfplane(Point inseed1, Point inseed2, int index_1, int index_2);
+    Halfplane(Point inseed1, Point inseed2, bool is_boundary);
     ~Halfplane();
-    Point seed1;
-    Point seed2;
-    int N;
-    vector<intersection> intersections;
+    Point midpoint;
+    Point hp_vec;
     bool boundary;
-    Point get_half_plane_vec();
-    Point get_midpoint();
+    int index1;
+    int index2;
+    void calc_half_plane_vec(Point &seed1, Point &seed2);
+    void calc_midpoint(Point &seed1, Point &seed2);
     
 
 

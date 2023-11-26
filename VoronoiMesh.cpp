@@ -13,26 +13,11 @@ VoronoiMesh::~VoronoiMesh() {}
 // construct all cells
 void VoronoiMesh::construct_mesh() {
 
-    // loop through all seeds to generate individual cells
-    for (int i = 0; i<N; i++) {
+    for (int i = 0; i < N; i++) {
 
-        // split points into seed and other
-        Point seed = pts[i];
-        Point* other_pts = new Point[N-1];
-
-        for (int j = 0; j<N-1; j++) {
-            if (i > j) {
-                other_pts[j] = pts[j];
-            } else {
-                other_pts[j] = pts[j+1];
-            }
-        }
-
-        // construct cell for given seed
-        VoronoiCell vcell(seed, other_pts, N);
+        // construct individual cell and add to vcells deque        
+        VoronoiCell vcell(pts, i, N);
         vcell.construct_cell();
-
-        // save constructed cell in vector
         vcells.push_back(vcell);
     }
 
@@ -142,28 +127,39 @@ bool VoronoiMesh::check_neighbours() {
 
     int nr_of_known_neighbours = 0;
     int nr_of_checked_edges = 0;
+    
 
+    // go through each cell
     for (int i = 0; i < vcells.size(); i++) {
+
+        // through each edge (first edge)
         for (int j = 0; j < vcells[i].edges.size(); j++) {
-            double x_1 = vcells[i].edges[j].seed2.x;
-            double y_1 = vcells[i].edges[j].seed2.y;
 
+            // exclude boundaries
             if (vcells[i].edges[j].boundary == false) {
-                nr_of_checked_edges += 1;
-            }
 
-            for (int k = 0; k < vcells.size(); k++) {
-                if (vcells[k].seed.x == x_1 && vcells[k].seed.y == y_1) {
-                    for (int l = 0; l < vcells[k].edges.size(); l++) {
-                        if (vcells[k].edges[l].seed2.x == vcells[i].seed.x && vcells[k].edges[l].seed2.y == vcells[i].seed.y) {
-                            nr_of_known_neighbours += 1;
+                nr_of_checked_edges += 1;
+
+                // check edges (seconde edge) of neigbour cell
+                for (int k = 0; k < vcells[vcells[i].edges[j].index2].edges.size(); k++) {
+
+                    // if there is a second edge corresponding to the first edge add nr of known neigbours +1
+                    if (vcells[vcells[i].edges[j].index2].edges[k].boundary == false && 
+                        vcells[vcells[i].edges[j].index2].edges[k].index2 == vcells[i].edges[j].index1) {
+
+                            nr_of_known_neighbours +=1;
+
                         }
-                    }
+
                 }
+
             }
+            
         }
+
     }
 
+    // check wether or not every neighbour knows its neighbour
     if (nr_of_checked_edges == nr_of_known_neighbours) {
         all_neighbours_known = true;
     }
