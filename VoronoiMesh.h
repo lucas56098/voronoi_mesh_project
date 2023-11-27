@@ -8,17 +8,19 @@
 class VoronoiMesh {
 
 public:
-    VoronoiMesh(Point* points, int N_seeds);
+    VoronoiMesh(deque<Point> points, int N_seeds);
     ~VoronoiMesh();
-    Point * pts;
+    deque<Point> pts;
     int N;
     deque<VoronoiCell> vcells;
     void construct_mesh();
+    void insert_cell(Point new_seed, int new_seed_index);
     void save_mesh_to_files(int nr);
     bool check_equidistance();
     double check_area();
     bool check_neighbours();
     bool check_mesh();
+    int find_cell_index(Point point);
 private:
 
 };

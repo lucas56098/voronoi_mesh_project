@@ -10,7 +10,7 @@ class Halfplane {
 public:
     Halfplane();
     Halfplane(Point inseed1, Point inseed2, int index_1, int index_2);
-    Halfplane(Point inseed1, Point inseed2, bool is_boundary);
+    Halfplane(Point inseed1, Point inseed2, int index_1, int index_2, bool is_boundary);
     ~Halfplane();
     Point midpoint;
     Point hp_vec;

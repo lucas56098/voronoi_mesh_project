@@ -15,8 +15,11 @@ Halfplane::Halfplane(Point inseed1, Point inseed2, int index_1, int index_2) {
     calc_midpoint(inseed1, inseed2);
 }
 
-Halfplane::Halfplane(Point inseed1, Point inseed2, bool is_boundary) {
+Halfplane::Halfplane(Point inseed1, Point inseed2, int index_1, int index_2, bool is_boundary) {
     boundary = is_boundary;
+
+    index1 = index_1;
+    index2 = index_2;
 
     calc_half_plane_vec(inseed1, inseed2);
     calc_midpoint(inseed1, inseed2);

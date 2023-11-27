@@ -6,14 +6,32 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <sys/resource.h>
 
 //#include "Halfplane.h"
 //#include "VoronoiCell.h"
 //using namespace std;
 
+// function to print out maximum memory usage
+int get_maxrss_memory() {
+        // Declare a rusage structure to store resource usage information
+    struct rusage usage;
+
+    // Get resource usage statistics for the current process
+    if (getrusage(RUSAGE_SELF, &usage) == 0) {
+        // Print the RSS memory size in kilobytes
+        int rssmax = usage.ru_maxrss;
+        cout << "max RSS memory size: " << (static_cast<double>(rssmax))/1024.0/1024.0 << " MB" << endl;
+        return rssmax;
+    } else {
+        cerr << "Error getting resource usage." << endl;
+        return 0;
+    }
+}
+
 // generates seed points to use for mesh generation
-Point* generate_seed_points(int N, bool fixed_random_seed, int min, int max, int rd_seed) {
-    Point* points = new Point[N];
+deque<Point> generate_seed_points(int N, bool fixed_random_seed, int min, int max, int rd_seed) {
+    deque<Point> points;
 
     unsigned int random_seed;
     default_random_engine eng;
@@ -37,7 +55,7 @@ Point* generate_seed_points(int N, bool fixed_random_seed, int min, int max, int
     for (int i = 0; i < N; ++i) {
         double x = distr(eng);
         double y = distr(eng);
-        points[i] = Point(x, y);
+        points.push_back(Point(x, y));
     }
 
     return points;
@@ -48,8 +66,8 @@ void generate_animation_files(int frames, int seeds) {
     
     // generate initial points and velocities for mesh
     int N_seeds = seeds;
-    Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
-    Point* vel = generate_seed_points(N_seeds, true, -1, 1, 38);
+    deque<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42);
+    deque<Point> vel = generate_seed_points(N_seeds, true, -1, 1, 38);
 
     // for each frame generate mesh and store it in files
     for (int i = 0; i < frames; i++) {
@@ -90,11 +108,15 @@ void do_benchmarking(string output_file, vector<int> seedvalues, bool append) {
 
     // append to file or create new file
     if (append) {
-        timing_list =  ofstream(output_file, ios::app);
+        timing_list =  ofstream("benchmarks/time_" + output_file, ios::app);
     } else {
-        timing_list = ofstream(output_file);
+        timing_list = ofstream("benchmarks/time_" + output_file);
         timing_list << "nr_seeds,time_in_microseconds\n";
     }
+
+    ofstream memory_list;
+    memory_list = ofstream("benchmarks/memory_" + output_file);
+    memory_list << "nr_seeds,rss_memory_usage_in_bytes\n";
 
     cout << "Start Benchmarking" << endl;
 
@@ -103,7 +125,7 @@ void do_benchmarking(string output_file, vector<int> seedvalues, bool append) {
         
         // generate seeds for mesh
         int N_seeds = seedvalues[i];
-        Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
+        deque<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42);
     
         // get current time point
         chrono::high_resolution_clock::time_point start_time = chrono::high_resolution_clock::now();
@@ -125,12 +147,14 @@ void do_benchmarking(string output_file, vector<int> seedvalues, bool append) {
 
         // output the duration in microseconds
         cout << "Seeds: " << N_seeds << "  Execution time: " << duration.count() << " microseconds" << endl;
-
+        memory_list << N_seeds << "," <<  get_maxrss_memory() << "\n";
+ 
         //vmesh.save_mesh_to_files(0);
         delete vmesh;
     }
 
     timing_list.close();
+    memory_list.close();
 
     cout << "Benchmarking done" << endl;
 
@@ -140,10 +164,9 @@ void do_benchmarking(string output_file, vector<int> seedvalues, bool append) {
 int main () {
 
 // MAIN : generate voronoi mesh for given seed number and stop time for that -------------------------------------
-
     // generate seeds for mesh
-    int N_seeds = 10000;
-    Point* pts = generate_seed_points(N_seeds, true, 0, 1, 42);
+    int N_seeds = 20;
+    deque<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42);
     
     // Get the current time point before the code execution
     chrono::high_resolution_clock::time_point start_time = chrono::high_resolution_clock::now();
@@ -171,12 +194,11 @@ int main () {
     // check mesh for correctness
     bool tests = vmesh.check_mesh();
     cout << "all tests: " << boolalpha << tests << endl;
-    
+
 
 // OPTIONAL : do benchmarking for some seeds ---------------------------------------------------------------------
     
     /*
-
     // choose seed numbers for which the benchmarking should be done
     vector<int> seedvals;
     seedvals.push_back(1);
@@ -193,19 +215,22 @@ int main () {
     seedvals.push_back(10000);
     seedvals.push_back(15000);
     seedvals.push_back(20000);
-    //seedvals.push_back(30000);
-    //seedvals.push_back(100000);
+    seedvals.push_back(30000);
+    seedvals.push_back(100000);
     //for (int i = 0; i< 30; i++) {
     //    seedvals.push_back(14000);
     //}
 
+
+
     // name output file
-    string output = "times_leakage_test2.csv";
+    string output = "hp_intersect_with_memory_log.csv";
 
     // do the benchmarking
     do_benchmarking(output, seedvals, false);  // true or false: append or new file
-    
+       
     */
+    
     
 
 // OPTIONAL : generate animation for a moving mesh1 --------------------------------------------------------------
@@ -216,8 +241,20 @@ int main () {
 
     */
 
+
+// OPTIONAL : print out max rss memory usage of the process ------------------------------------------------------
+    double max_memory = get_maxrss_memory();
+
+
+// TESTING : test insert_cell method --- DOES NOT WORK AT THE MOMENT
+
+    //vmesh.insert_cell(Point(0.5, 0.5), N_seeds);
+    //vmesh.insert_cell(Point(0.1, 0.1), N_seeds+1);
+
+    //vmesh.save_mesh_to_files(1);
+
     cout << "done" << endl;
-    
+    return 0;    
 
 }
 
