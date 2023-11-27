@@ -1,13 +1,19 @@
 # voronoi_mesh_project
 Small C++ Project to generate a voronoi mesh in the most naive way possible. Still work in progress...
 
-### Later on
-- Further improve performance (do further profiling)
+### Todos
+- Write Point insertion algorithm
+- Change Point insertion algorithm to O(nlogn) scaling
 - Other algorithms and comparison...
 
 ![til](./figures/example_voronoi_animation.gif)
 
-### Performance
-At the moment the program is still very slow. The further goal is to see wether this can be optimized or is intrinsic to the naive approach. Here you can see some benchmarking on my machine (MacBook M1) running the debug and release version. For the green line some memory management is introduced (e.g. all halfplanes and points that are no edges or seed get deleted once cell is fully constructed). For the red line the algorithm was improved at its core to improve from ~O(n^3) scaling to ~O(n^2) scaling. The main difference is, that the halfplanes don't get intersected all at the beginning of construct cell (~n-steps). Instead only for the current halfplane the intersections are calculated when needed (steps proportional to nr of edges of cell << n). This also allows to delete the intersections from memory once the vertex is identified. Another improvement is that for some lists that aren't accessed frequently but store huge objects (like the vcells list) the data type was changed from vector to deque which prevents copying lots of data. Of course this slows down the correctness checks slightly. At the moment the program runs stable up to around 15000 points on my machine. After that some memory limit is reached. I guess ill have to further improve that.
+### Time performance
+The initial version of the program was still very slow (debug and release) with an O(n^3) scaling. The rest of the benchmarks are in release mode. After improving some initial memory problems the O(n^3) version is still quite slow and had memory problems after 15000 Pts. The newer version of the algorithm has an O(n^2) scaling and is no longer memory limited. 
 
 ![Image](./figures/example_benchmark.png)
+
+### Memory usage
+Memory usage for the O(n^2) algorithm. One can see that the program is no longer memory limited in any reasonable computing time.
+
+![Image](./figures/example_memory_benchmark.png)
