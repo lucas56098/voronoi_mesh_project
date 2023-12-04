@@ -10,11 +10,10 @@
 
 VoronoiCell::VoronoiCell() {}
 
-VoronoiCell::VoronoiCell(Point in_seed, int in_index, int N_pts) {
+VoronoiCell::VoronoiCell(Point in_seed, int in_index) {
     
     index = in_index;
     seed = in_seed;
-    N = N_pts;
 
 }
 
@@ -64,6 +63,14 @@ void VoronoiCell::intersect_two_halfplanes(Halfplane &hp1, Halfplane &hp2, deque
             
         } else if (!(hp1.boundary || hp2.boundary)) {
             cout << "no solution while trying to intersect two halfplanes" << endl;
+                    
+            // add intersection to intersections
+            //intersection intersect;
+            //intersect.intersect_pt = Point(-100, -100);
+            //intersect.dist_to_midpoint = -100;
+            //intersect.intersecting_with = &hp2;
+
+            //intersections.push_back(intersect);
         }
     }
     
@@ -71,7 +78,7 @@ void VoronoiCell::intersect_two_halfplanes(Halfplane &hp1, Halfplane &hp2, deque
 }
 
 // generate all halfplanes + boundary halfplanes
-void VoronoiCell::generate_halfplane_vector(deque<Point> pts, vector<int> indices) {
+void VoronoiCell::generate_halfplane_vector(deque<Point> pts,  vector<int> indices) {
     
     // generate boundary halfplanes
     halfplanes.push_back(Halfplane(Point(0.5,0.5), Point(0.5,1.5), -1, -2, true));
@@ -80,7 +87,7 @@ void VoronoiCell::generate_halfplane_vector(deque<Point> pts, vector<int> indice
     halfplanes.push_back(Halfplane(Point(0.5,0.5), Point(-0.5,0.5), -1, -5, true));
 
     // generate usual halfplanes
-    for (int i = 0; i<N; i++) {
+    for (int i = 0; i<pts.size(); i++) {
         if (!(index == indices[i])) {
             halfplanes.push_back(Halfplane(seed, pts[i], index, indices[i]));
         }
@@ -93,7 +100,7 @@ void VoronoiCell::search_hp_closest_to_seed(Halfplane &first_hp) {
 
     double dist_min = 42;
 
-    for (int i = 0; i<N+3; i++) {
+    for (int i = 0; i<halfplanes.size(); i++) {
         double dist = sqrt((seed.x - halfplanes[i].midpoint.x)*(seed.x - halfplanes[i].midpoint.x)+
                             (seed.y - halfplanes[i].midpoint.y) * (seed.y - halfplanes[i].midpoint.y));
         if (dist_min > dist) {
@@ -152,7 +159,7 @@ void VoronoiCell::construct_cell(deque<Point> pts, vector<int> indices) {
     deque<intersection> intersections;
 
     //intersect halfplanes for current_hp
-    for (int j = 0; j<N+3; j++) {
+    for (int j = 0; j<halfplanes.size(); j++) {
             if (!(current_hp.index2 == halfplanes[j].index2)) {
                 intersect_two_halfplanes(current_hp, halfplanes[j], intersections);
             }
@@ -254,7 +261,7 @@ bool VoronoiCell::check_equidistance_condition(deque<Point> seeds) {
             double min_dist = 42;
 
             // determine minimum distance
-            for (int j = 0; j < N; j++) {
+            for (int j = 0; j < seeds.size(); j++) {
 
                 // calc distance between seed and vertex
                 double dist = sqrt((seeds[j].x - verticies[i].x)*(seeds[j].x - verticies[i].x) +
@@ -266,7 +273,7 @@ bool VoronoiCell::check_equidistance_condition(deque<Point> seeds) {
             }
 
             // search for seeds with minimum distance
-            for (int j = 0; j < N; j++) {
+            for (int j = 0; j < seeds.size(); j++) {
 
                 // calc distance between seed and vertex
                 double dist = sqrt((seeds[j].x - verticies[i].x)*(seeds[j].x - verticies[i].x) +

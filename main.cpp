@@ -102,7 +102,7 @@ void generate_animation_files(int frames, int seeds) {
 }
 
 // function to benchmark the mesh generation algorithm, saves times in csv
-void do_benchmarking(string output_file, vector<int> seedvalues, bool append) {
+void do_benchmarking(string output_file, vector<int> seedvalues, bool append, int algorithm) {
 
     ofstream timing_list;
 
@@ -132,7 +132,11 @@ void do_benchmarking(string output_file, vector<int> seedvalues, bool append) {
 
         // construct mesh
         VoronoiMesh* vmesh = new VoronoiMesh(pts, N_seeds);
-        vmesh->construct_mesh();
+        if (algorithm == 0) {
+            vmesh->construct_mesh();
+        } else {
+            vmesh->do_point_insertion();
+        }
 
         // get current time point
         chrono::high_resolution_clock::time_point end_time = chrono::high_resolution_clock::now();
@@ -165,7 +169,8 @@ int main () {
 
 // MAIN : generate voronoi mesh for given seed number and stop time for that -------------------------------------
     // generate seeds for mesh
-    int N_seeds = 20;
+    int N_seeds = 300000;
+
     deque<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42);
     
     // Get the current time point before the code execution
@@ -173,7 +178,8 @@ int main () {
 
     // construct mesh
     VoronoiMesh vmesh(pts, N_seeds);
-    vmesh.construct_mesh();
+    //vmesh.construct_mesh();
+    vmesh.do_point_insertion();
 
     // Get the current time point after the code execution
     chrono::high_resolution_clock::time_point end_time = chrono::high_resolution_clock::now();
@@ -192,8 +198,8 @@ int main () {
 // OPTIONAL : do correctness checks ------------------------------------------------------------------------------
 
     // check mesh for correctness
-    bool tests = vmesh.check_mesh();
-    cout << "all tests: " << boolalpha << tests << endl;
+    //bool tests = vmesh.check_mesh();
+    //cout << "all tests: " << boolalpha << tests << endl;
 
 
 // OPTIONAL : do benchmarking for some seeds ---------------------------------------------------------------------
@@ -217,6 +223,8 @@ int main () {
     seedvals.push_back(20000);
     seedvals.push_back(30000);
     seedvals.push_back(100000);
+    //seedvals.push_back(300000);
+    //seedvals.push_back(500000);
     //for (int i = 0; i< 30; i++) {
     //    seedvals.push_back(14000);
     //}
@@ -224,10 +232,10 @@ int main () {
 
 
     // name output file
-    string output = "hp_intersect_with_memory_log.csv";
+    string output = "new_alg_testversion.csv";
 
     // do the benchmarking
-    do_benchmarking(output, seedvals, false);  // true or false: append or new file
+    do_benchmarking(output, seedvals, false, 1);  // true or false: append or new file
        
     */
     
@@ -243,15 +251,34 @@ int main () {
 
 
 // OPTIONAL : print out max rss memory usage of the process ------------------------------------------------------
-    double max_memory = get_maxrss_memory();
+    //double max_memory = get_maxrss_memory();
 
 
 // TESTING : test insert_cell method --- DOES NOT WORK AT THE MOMENT
 
     //vmesh.insert_cell(Point(0.5, 0.5), N_seeds);
-    //vmesh.insert_cell(Point(0.1, 0.1), N_seeds+1);
-
     //vmesh.save_mesh_to_files(1);
+    //vmesh.insert_cell(Point(0.55, 0.55), N_seeds+1);
+    //vmesh.save_mesh_to_files(2);
+    //vmesh.insert_cell(Point(0.58, 0.58), N_seeds+2);
+    //vmesh.save_mesh_to_files(3);
+    //vmesh.insert_cell(Point(0.1, 0.1), N_seeds+1);
+    //vmesh.insert_cell(Point(0.4, 0.54), N_seeds+3);
+    //vmesh.save_mesh_to_files(4);
+    //vmesh.insert_cell(Point(0.5, 0.55), N_seeds+4);
+    //vmesh.save_mesh_to_files(5);
+    //vmesh.insert_cell(Point(0.45, 0.55), N_seeds+5);
+    //vmesh.save_mesh_to_files(6);
+    //vmesh.insert_cell(Point(0.9, 0.5), N_seeds);
+    //vmesh.save_mesh_to_files(7);
+
+    // for it to work generally the new_cell needs to work even if it touches a boundary
+    // also the adapted cells need to work when they touch a boundary -> DONE
+    // check for degeneracy eg. vertex on vertex -> DONE
+    // built function to do point insertion
+
+    // idee: wenn wir als vertex einen an der boundary kriegen dann geh andersherum bis man dort auch an der boundary angekommen ist
+    // anhand dieser Edges wird die Cell dann mit construct cell anhand dieser Punkte generiert
 
     cout << "done" << endl;
     return 0;    

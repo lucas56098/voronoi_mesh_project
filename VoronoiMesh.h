@@ -20,7 +20,9 @@ public:
     double check_area();
     bool check_neighbours();
     bool check_mesh();
+    void do_point_insertion();
     int find_cell_index(Point point);
+    int boundary_cells;
 private:
 
 };

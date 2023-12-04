@@ -18,9 +18,8 @@ class VoronoiCell {
 
 public:
     VoronoiCell();
-    VoronoiCell(Point in_seed, int index, int N_pts);
+    VoronoiCell(Point in_seed, int index);
     ~VoronoiCell();
-    int N;
     int index;
     Point seed;
     deque<Halfplane> halfplanes;
@@ -30,10 +29,10 @@ public:
     void construct_cell(deque<Point> pts, vector<int> indices);
     bool check_equidistance_condition(deque<Point> seeds);
     double get_area();
-private:
     void generate_halfplane_vector(deque<Point> pts, vector<int> indices);
-    void search_hp_closest_to_seed(Halfplane &first_hp);
     double get_signed_angle(Point u, Point v);
+private:
+    void search_hp_closest_to_seed(Halfplane &first_hp);
 
 
 };
