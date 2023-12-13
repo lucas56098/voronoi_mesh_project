@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <set>
 
 VoronoiMesh::VoronoiMesh(deque<Point> points, int N_seeds) {
     pts = points;
@@ -34,9 +35,10 @@ void VoronoiMesh::construct_mesh() {
 // find cell in which the point is in
 int VoronoiMesh::find_cell_index(Point point) {
     
-    VoronoiCell current_cell = vcells[0];
-    double new_cell_index;
+    VoronoiCell current_cell = vcells[0];//vcells.back();
+    double new_cell_index = current_cell.index;
     bool found_cell = true;
+    //int counter = 0;
 
     do {
 
@@ -60,12 +62,85 @@ int VoronoiMesh::find_cell_index(Point point) {
         }
 
         current_cell = vcells[new_cell_index];
-
+        //counter +=1;
     } while (!found_cell);
+
+    //cout << counter << endl;
 
     return new_cell_index;
 }
 
+// function to determine the smallest positive intersection
+void VoronoiMesh::find_smallest_pos_intersect(Halfplane &current_hp, int &current_cell_index, VoronoiCell &new_cell, Point &last_vertex, int &last_cell_index, Point &vertex, Halfplane &edge_hp) {
+    
+    // calculate distance from last_vertex to the midpoint of the current_cell
+    double last_vertex_dist_to_midpoint = (last_vertex.x - current_hp.midpoint.x)*current_hp.hp_vec.x
+                                        + (last_vertex.y - current_hp.midpoint.y)*current_hp.hp_vec.y;
+
+    // get intersections of current halfplane with all edges of the current cell
+    deque<intersection> intersections;
+    for (int i = 0; i<vcells[current_cell_index].edges.size(); i++) {
+        new_cell.intersect_two_halfplanes(current_hp, vcells[current_cell_index].edges[i], intersections);
+    }
+
+    double dist = 42;
+    double epsilon = 0.000000001;
+    bool need_to_check_for_degeneracy = false;
+
+    // find the intersection with smallest but positive relative distance
+    for (int i = 0; i<intersections.size(); i++) {
+
+        // calculate relative distance between intersection and last vertex
+        double rel_dist = intersections[i].dist_to_midpoint - last_vertex_dist_to_midpoint;
+
+        // reduce dist if rel_dist is smaller
+        if (rel_dist > 0 && rel_dist < dist && !(last_cell_index == (*intersections[i].intersecting_with).index2)) {
+
+            if (rel_dist < dist + epsilon && rel_dist > dist - epsilon) {
+                need_to_check_for_degeneracy = true;
+            }
+
+            dist = rel_dist;
+            vertex = intersections[i].intersect_pt;
+            edge_hp = *intersections[i].intersecting_with;
+
+        }
+
+    }
+
+    // if degenerate case possible do further checks
+    if (need_to_check_for_degeneracy) {
+        vector<Halfplane> deg_hp_list;
+
+        // recalculate the distances and store the ones same to dist (the minimal distance with tolearnce)
+        for (int i = 0; i < intersections.size(); i++) {
+            double rel_dist = intersections[i].dist_to_midpoint - last_vertex_dist_to_midpoint;
+
+            if (rel_dist < dist + epsilon && rel_dist > dist - epsilon) {
+                deg_hp_list.push_back(*intersections[i].intersecting_with);
+            }
+        }
+
+        // out of the degenerate halfplanes find the one with maximum signed angle
+        double max_angle = 0;
+        for (int i = 0; i < deg_hp_list.size(); i++) {
+
+            // calculate signed angle
+            double angle = new_cell.get_signed_angle(current_hp.hp_vec, deg_hp_list[i].hp_vec);
+
+            if (angle > max_angle) {
+                max_angle = angle;
+                edge_hp = deg_hp_list[i];
+            }
+
+        }
+
+    }
+
+
+
+    
+}
 
 // add another seed into existing mesh 
 // CONSTRUCTION SITE :: (until now only works if new cell doesnt get affected by the border)
@@ -88,6 +163,11 @@ void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
     int counter = 0;
     do {
 
+    Point vertex;
+    Halfplane edge_hp;
+
+    find_smallest_pos_intersect(current_hp,current_cell_index,new_cell,last_vertex,last_cell_index, vertex, edge_hp);
+/*
     // calculate distance from last_vertex to the midpoint of the current cell
     double last_vertex_dist_to_midpoint = (last_vertex.x - current_hp.midpoint.x)*current_hp.hp_vec.x
                                         + (last_vertex.y - current_hp.midpoint.y)*current_hp.hp_vec.y;
@@ -158,14 +238,158 @@ void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
 
     }
 
+*/
+
     // store the found edge and vertex in cell
     new_cell.edges.push_back(current_hp);
     new_cell.verticies.push_back(vertex);
+    //cout << "hinweg: " << vertex.x << ", " << vertex.y << endl;
 
+    // if the algorithm hits an edge
     if (edge_hp.boundary) {
 
-        // this needs to be changed!! 
-        // find a way to compute the whole new_cell
+        
+        // idea do the step by step algorithm until boundary backwards
+
+        current_cell_index = cell_im_in_index;
+        current_hp = first_hp;
+        last_vertex = current_hp.midpoint;
+        last_cell_index = -42;
+
+        int counter1 = 0;
+
+        do {
+
+            // calculate distance from last_vertex to the midpoint of the current cell
+            double last_vertex_dist_to_midpoint = (last_vertex.x - current_hp.midpoint.x)*current_hp.hp_vec.x
+                                                + (last_vertex.y - current_hp.midpoint.y)*current_hp.hp_vec.y;
+
+            // get intersections of current halfplane with all edges of the current cell
+            deque<intersection> intersections;
+            for (int i=0; i<vcells[current_cell_index].edges.size(); i++) {
+                    new_cell.intersect_two_halfplanes(current_hp, vcells[current_cell_index].edges[i], intersections);
+            }
+            
+            double dist = -42;
+            Point vertex;
+            Halfplane edge_hp;
+            bool need_to_check_for_degeneracy = false;
+
+            // find the intersection with smallest but positive relative distance
+            for (int i=0; i<intersections.size(); i++) {
+        
+                // calculate relative distance between intersection and last vertex
+                double rel_dist = intersections[i].dist_to_midpoint - last_vertex_dist_to_midpoint;
+
+                // reduce dist if rel_dist is smaller
+                if (rel_dist < 0 && rel_dist > dist && !(last_cell_index == (*intersections[i].intersecting_with).index2) ) {
+        
+                    // check for possibility of degeneracy
+                    if (rel_dist == dist) {
+                        need_to_check_for_degeneracy = true;
+                    }
+
+                    // provisionally set dist, vertex and edge_hp (will eventually be the true ones)
+                    dist = rel_dist;
+                    vertex = intersections[i].intersect_pt;
+                    edge_hp = *intersections[i].intersecting_with;
+                }
+            }
+
+            // if degenerate case possible do further checks
+            if (need_to_check_for_degeneracy) {
+                vector<Halfplane> deg_hp_list;
+
+                // recalculate the distances and store the ones same to dist (the minimal distance)
+                for (int i = 0; i < intersections.size(); i++) {
+
+                    double rel_dist = intersections[i].dist_to_midpoint - last_vertex_dist_to_midpoint;
+
+                    if (rel_dist == dist) {
+                        deg_hp_list.push_back(*intersections[i].intersecting_with);
+                    }
+
+                }
+
+                // out of the degenerate halfplanes find the one with maximum signed angle
+                double max_angle = 0;
+                for (int i = 0; i < deg_hp_list.size(); i++) {
+
+                    // calculate signed angle
+                    double angle = new_cell.get_signed_angle(current_hp.hp_vec, deg_hp_list[i].hp_vec);
+
+                    // maximise
+                    if (angle < max_angle) {
+                        max_angle = angle;
+                        edge_hp = deg_hp_list[i];
+                    }
+                }
+
+            }
+
+            // store the found edge and vertex in cell 
+            new_cell.edges.push_back(current_hp);
+            new_cell.verticies.push_back(vertex);
+            //cout << "rückweg: " << vertex.x << ", " << vertex.y << endl;
+
+            if (edge_hp.boundary) {
+                // do something useful her
+                // generate cell using jk what
+                //cout << "found boundary second time" << endl;
+                counter1 = 10000;
+
+                vector<int> indices;
+                for (int i = 0; i<new_cell.edges.size(); i++) {
+                    indices.push_back(new_cell.edges[i].index2);
+                }
+// this one is a quick and dirty fix. not meant for any release version !                
+                for (int i = 0; i<vcells[cell_im_in_index].edges.size(); i ++) {
+                    if (vcells[cell_im_in_index].edges[i].index2 >= 0) {
+                        indices.push_back(vcells[cell_im_in_index].edges[i].index2);
+                    }
+                }
+
+                set<int> uniqueNumbers(indices.begin(), indices.end());
+                vector<int> res_indices(uniqueNumbers.begin(), uniqueNumbers.end());
+
+                VoronoiCell vcell(new_seed, new_seed_index);                
+
+                deque<Point> res_pt;
+
+                for (int i = 0; i< res_indices.size(); i ++) {
+                    res_pt.push_back(pts[res_indices[i]]);
+                }
+
+                res_pt.push_back(new_seed);
+                res_indices.push_back(new_seed_index);
+
+                vcell.construct_cell(res_pt, res_indices);
+
+                new_cell = vcell;
+
+        
+
+            } else {
+                // some updates of variables before redoing all steps
+                last_vertex = vertex;
+                last_cell_index = current_cell_index;
+                current_cell_index = edge_hp.index2;
+                current_hp = Halfplane(new_seed, vcells[current_cell_index].seed, new_seed_index, current_cell_index);
+                intersections.clear();
+                counter1 += 1;
+                if (counter1 >= 10000) {
+                    cout << "problem in the second if" << endl;
+                }
+            }
+
+        } while (counter1 < 10000);
+
+        
+        // add everything to edges and verticies
+        // construct new cell using point list from edge list of the cell
+        /*
+
+        
         VoronoiCell vcell(new_seed, new_seed_index);
         deque<Point> new_pts = pts;
 
@@ -181,6 +405,8 @@ void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
 
         new_cell = vcell;
 
+        */
+
         //cout << "do boundary cell with old algorithm" << endl;
         boundary_cells +=1;
         counter = 10000;
@@ -192,24 +418,25 @@ void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
         last_cell_index = current_cell_index;
         current_cell_index = edge_hp.index2;
         current_hp = Halfplane(new_seed, vcells[current_cell_index].seed, new_seed_index, current_cell_index);
-        intersections.clear();
+        //intersections.clear();
         counter += 1;
+        if (counter >= 10000) {
+                    cout << "problem in the first if" << endl;
+                }
 
     }
 
 
     } while (!(first_hp.index2 == current_hp.index2) && counter < 10000);
 
+    //cout << new_cell.edges.size() << endl;
+
     // store new_cell in vcells and new point in pts
     vcells.push_back(new_cell);
     pts.push_back(new_seed);
 
-    //cout << "new cell edges: ";
-    //cout << new_cell.edges.size() << endl;
-
     // find indices for which the cells need to be adapted
     vector<int> cells_to_adapt;
-
     for (int i = 0; i<new_cell.edges.size(); i++) {
         if (new_cell.edges[i].index2 >= 0) {
             cells_to_adapt.push_back(new_cell.edges[i].index2);
@@ -223,11 +450,6 @@ void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
         vector<int> relevant_pt_indices;
         relevant_pt_indices.push_back(cells_to_adapt[i]);
         relevant_pt_indices.push_back(new_seed_index);
-
-        //cout << "---" << endl;
-        //cout << cells_to_adapt[i] << endl;
-
-        //cout << vcells[cells_to_adapt[i]].edges.size() << endl;
 
         for (int j = 0; j < vcells[cells_to_adapt[i]].edges.size(); j++) {
 
@@ -258,12 +480,15 @@ void VoronoiMesh::do_point_insertion() {
 
     deque<Point> all_pts = pts;
     pts.clear();
-    pts.push_back(all_pts[0]);
+
+    for (int i=0; i<2; i++) {
+        pts.push_back(all_pts[i]);
+    }
 
     construct_mesh();
-    boundary_cells += 1;
+    boundary_cells += 2;
 
-    for (int i = 1; i<all_pts.size(); i++) {
+    for (int i = 2; i<all_pts.size(); i++) {
         insert_cell(all_pts[i], i);
     }
 
