@@ -1,11 +1,12 @@
-#include "Halfplane.h"
 #include <vector>
 #include <cmath>
+#include "Halfplane.h"
 
 
 Halfplane::Halfplane() {}
 
 Halfplane::Halfplane(Point inseed1, Point inseed2, int index_1, int index_2) {
+    
     boundary = false;
 
     index1 = index_1;
@@ -16,6 +17,7 @@ Halfplane::Halfplane(Point inseed1, Point inseed2, int index_1, int index_2) {
 }
 
 Halfplane::Halfplane(Point inseed1, Point inseed2, int index_1, int index_2, bool is_boundary) {
+    
     boundary = is_boundary;
 
     index1 = index_1;

@@ -1,12 +1,10 @@
-#include "VoronoiCell.h"
-#include "Point.h"
-#include "Halfplane.h"
-//using namespace std;
 #include <iostream>
 #include <cmath>
 #include <vector>
 #include <deque>
-
+#include "VoronoiCell.h"
+#include "Point.h"
+#include "Halfplane.h"
 
 VoronoiCell::VoronoiCell() {}
 
@@ -64,13 +62,6 @@ void VoronoiCell::intersect_two_halfplanes(Halfplane &hp1, Halfplane &hp2, deque
         } else if (!(hp1.boundary || hp2.boundary)) {
             cout << "no solution while trying to intersect two halfplanes" << endl;
                     
-            // add intersection to intersections
-            //intersection intersect;
-            //intersect.intersect_pt = Point(-100, -100);
-            //intersect.dist_to_midpoint = -100;
-            //intersect.intersecting_with = &hp2;
-
-            //intersections.push_back(intersect);
         }
     }
     
@@ -100,6 +91,7 @@ void VoronoiCell::search_hp_closest_to_seed(Halfplane &first_hp) {
 
     double dist_min = 42;
 
+    // go through halfplanes and find closest one
     for (int i = 0; i<halfplanes.size(); i++) {
         double dist = sqrt((seed.x - halfplanes[i].midpoint.x)*(seed.x - halfplanes[i].midpoint.x)+
                             (seed.y - halfplanes[i].midpoint.y) * (seed.y - halfplanes[i].midpoint.y));

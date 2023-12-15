@@ -22,10 +22,12 @@ public:
     bool check_mesh();
     void do_point_insertion();
     int find_cell_index(Point point);
-    int boundary_cells;
+private:
     void find_smallest_pos_intersect(Halfplane &current_hp, int &current_cell_index, VoronoiCell &new_cell, Point &last_vertex, 
                                         int &last_cell_index, Point &vertex, Halfplane &edge_hp);
-private:
+    int get_edge_index_in_cell(int &edge_index, VoronoiCell &vcell);
+    bool intersection_between_start_stop(int index, Point &new_seed, int &new_seed_index, int &next_cell_index, 
+                                            VoronoiCell &new_cell);
 
 };
 

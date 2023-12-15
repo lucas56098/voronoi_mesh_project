@@ -1,41 +1,45 @@
 #include <iostream>
 #include <random>
-#include "Point.h"
-#include "VoronoiMesh.h"
 #include <chrono>
 #include <string>
 #include <vector>
 #include <fstream>
 #include <sys/resource.h>
+#include "Point.h"
+#include "VoronoiMesh.h"
 
-// function to print out maximum memory usage
+// MEMORY: function to print out maximum memory usage
 long long get_maxrss_memory() {
-        // Declare a rusage structure to store resource usage information
+    
+    // declare a rusage structure to store resource usage information
     struct rusage usage;
 
-    // Get resource usage statistics for the current process
+    // get resource usage statistics for the current process
     if (getrusage(RUSAGE_SELF, &usage) == 0) {
-        // Print the RSS memory size in kilobytes
+    
+        // print the RSS memory size in megabytes
         long long rssmax = usage.ru_maxrss;
         cout << "max RSS memory size: " << rssmax/1024.0/1024.0 << " MB" << endl;
         return rssmax;
+
     } else {
+
         cerr << "Error getting resource usage." << endl;
+
         return 0;
     }
 }
 
+// RANDOM POINTS: function to get a sort index
 int get_sort_index(Point pt, int sort_grid_size) {
-    
-    double nr = static_cast<double>(sort_grid_size);
 
+    double nr = static_cast<double>(sort_grid_size);
     int index = static_cast<int>(pt.x * nr) + static_cast<int>(nr * nr * pt.y);
-    //cout << index << endl;
     return index;
 }
 
-// generates seed points to use for mesh generation
-deque<Point> generate_seed_points(int N, bool fixed_random_seed, int min, int max, int rd_seed, bool sort_pts) {
+// RANDOM POINTS: generates seed points to use for mesh generation
+deque<Point> generate_seed_points(int N, bool fixed_random_seed, int min, int max, int rd_seed, bool sort_pts, int sort_precision) {
     deque<Point> points;
 
     unsigned int random_seed;
@@ -63,30 +67,30 @@ deque<Point> generate_seed_points(int N, bool fixed_random_seed, int min, int ma
         points.push_back(Point(x, y));
     }
 
+    // if this is true the points will be sorted
     if (sort_pts) {
         vector<int> indices;
         vector<int> sort_indices;
 
+        // get sort indices
         for (int i = 0; i < points.size(); i++) {
-            indices.push_back(get_sort_index(points[i], 1000));
+            indices.push_back(get_sort_index(points[i], sort_precision));
             sort_indices.push_back(i);
         }
 
+        // combine data into pairs
         vector<pair<int, int> > combined;
-
         for (int i = 0; i < indices.size(); ++i) {
             combined.push_back(make_pair(indices[i], sort_indices[i]));
         }    
 
+        // sort combined data by sort indices
         sort(combined.begin(), combined.end());
 
+        // get sorted_pts
         deque<Point> sorted_pts;
-
-        //cout << "---" << endl;
-
         for (int i = 0; i < combined.size(); i++) {
             sorted_pts.push_back(points[combined[i].second]);
-            //cout << combined[i].first << endl;
         }
 
         return sorted_pts;
@@ -95,13 +99,13 @@ deque<Point> generate_seed_points(int N, bool fixed_random_seed, int min, int ma
     return points;
 }
 
-// generates moving mesh and stores it frame by frame in files
+// ANIMATION: generates moving mesh and stores it frame by frame in files
 void generate_animation_files(int frames, int seeds) {
     
     // generate initial points and velocities for mesh
     int N_seeds = seeds;
-    deque<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, true);
-    deque<Point> vel = generate_seed_points(N_seeds, true, -1, 1, 38, false);
+    deque<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, true, 1000);
+    deque<Point> vel = generate_seed_points(N_seeds, true, -1, 1, 38, false, 1000);
 
     // for each frame generate mesh and store it in files
     for (int i = 0; i < frames; i++) {
@@ -127,7 +131,7 @@ void generate_animation_files(int frames, int seeds) {
 
         // construct mesh
         VoronoiMesh vmesh(pts, N_seeds);
-        vmesh.construct_mesh();
+        vmesh.do_point_insertion();
         vmesh.save_mesh_to_files(i);
         cout << i << endl;
 
@@ -135,7 +139,55 @@ void generate_animation_files(int frames, int seeds) {
 
 }
 
-// function to benchmark the mesh generation algorithm, saves times in csv
+// ANIMATION: function to generate files for animation of grid construction
+void animate_algorithm(int N_seeds, int rd_seed, int algorithm, bool sort) {
+
+    // generate seed points for animation and its indices
+    deque<Point> pts = generate_seed_points(N_seeds, true, 0, 1, rd_seed, sort, 1000);
+    vector<int> indices;
+    for (int i = 0; i<pts.size(); i++) {
+        indices.push_back(i);
+    }
+
+    // mesh for the halfplane intersection algorithm
+    VoronoiMesh vmesh_hp_intersect(pts, N_seeds);
+
+    for (int i = 1; i<N_seeds; i++) {
+
+        // actual points known at frame by point insertion mesh
+        deque<Point> actual_pts;
+        for (int j = 0; j < i; j++) {
+            actual_pts.push_back(pts[j]);
+        }
+    
+        // algorithm 0 : halfplane intersection
+        if (algorithm == 0) {
+
+            // construct cell as far as known in that step
+            VoronoiCell vcell(pts[i-1], i-1);
+            vcell.construct_cell(pts, indices);
+            vmesh_hp_intersect.vcells.push_back(vcell);
+            vmesh_hp_intersect.save_mesh_to_files(i-1);
+
+        // algorithm != 0 : point insertion
+        } else {
+
+            // construct cell as far as known in that step
+            VoronoiMesh vmesh(actual_pts, i);
+            if (i<=3) {
+                vmesh.construct_mesh();
+            } else {
+                vmesh.do_point_insertion();
+            }
+            vmesh.save_mesh_to_files(i-1);
+        }
+        cout << i-1 << endl;
+
+    }
+
+}
+
+// BENCHMARKING: function to benchmark the mesh generation algorithm, saves times in csv
 void do_benchmarking(string output_file, vector<int> seedvalues, bool append, int algorithm) {
 
     ofstream timing_list;
@@ -159,7 +211,7 @@ void do_benchmarking(string output_file, vector<int> seedvalues, bool append, in
         
         // generate seeds for mesh
         int N_seeds = seedvalues[i];
-        deque<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, false);
+        deque<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, true, 1000);
     
         // get current time point
         chrono::high_resolution_clock::time_point start_time = chrono::high_resolution_clock::now();
@@ -198,48 +250,44 @@ void do_benchmarking(string output_file, vector<int> seedvalues, bool append, in
 
 }
 
-// generates points, will generate mesh, stop time and do tests
-int main () {
-
-
 
 // MAIN : generate voronoi mesh for given seed number and stop time for that -------------------------------------
+int main () {
+    
     // generate seeds for mesh
-    int N_seeds = 5;
+    int N_seeds = 30;
 
-    deque<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, false);
+    deque<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, true, 1000);
 
-    // Get the current time point before the code execution
+    // get the current time point before the code execution
     chrono::high_resolution_clock::time_point start_time = chrono::high_resolution_clock::now();
 
     // construct mesh
     VoronoiMesh vmesh(pts, N_seeds);
-    //vmesh.construct_mesh();
-    vmesh.do_point_insertion();
+    //vmesh.construct_mesh();               // <-- O(n^2) scaling half plane intersection
+    vmesh.do_point_insertion();             // <-- O(nlogn) scaling point insertion algoithm
 
-    // Get the current time point after the code execution
+    // get the current time point after the code execution
     chrono::high_resolution_clock::time_point end_time = chrono::high_resolution_clock::now();
 
-    // Calculate the duration of the code execution
+    // calculate the duration of the code execution
     chrono::microseconds duration = chrono::duration_cast<chrono::microseconds>(end_time - start_time);
 
-    // Output the duration in microseconds
+    // output the duration in microseconds
     cout << "Execution time: " << duration.count() << " microseconds" << endl;
 
     // save mesh to file
     vmesh.save_mesh_to_files(0);
 
 
-
 // OPTIONAL : do correctness checks ------------------------------------------------------------------------------
 
     // check mesh for correctness
-    bool tests = vmesh.check_mesh();
+    bool tests = vmesh.check_mesh();                            // <-- usually take longer then generating the grid
     cout << "all tests: " << boolalpha << tests << endl;
 
 
 // OPTIONAL : do benchmarking for some seeds ---------------------------------------------------------------------
-
 /*
 
     // choose seed numbers for which the benchmarking should be done
@@ -260,76 +308,31 @@ int main () {
     seedvals.push_back(20000);
     seedvals.push_back(30000);
     seedvals.push_back(100000);
-    //seedvals.push_back(500000);
-    //seedvals.push_back(1000000);
-    //seedvals.push_back(2000000);
-    //seedvals.push_back(3000000);
-    //seedvals.push_back(4000000);
-    //seedvals.push_back(5000000);
-    //seedvals.push_back(200000);
-    //seedvals.push_back(300000);
-    //seedvals.push_back(300000);
-    //seedvals.push_back(500000);
-    //for (int i = 0; i< 30; i++) {
-    //    seedvals.push_back(14000);
-    //}
-
-
+    seedvals.push_back(300000);
+    seedvals.push_back(500000);
+    seedvals.push_back(1000000);
 
     // name output file
-    string output = "new_alg_testversion.csv";
+    string output = "for_memory_benchmark.csv";
 
     // do the benchmarking
     do_benchmarking(output, seedvals, false, 1);  // true or false: append or new file
-       
-    */    
 
-// OPTIONAL : generate animation for a moving mesh1 --------------------------------------------------------------
+*/   
+// OPTIONAL : generate animations  -------------------------------------------------------------------------------
 
-    /*
+    // animation for a moving mesh
+    //generate_animation_files(300, 30);
 
-    generate_animation_files(30, 3);
-
-    */
-
+    //animate_algorithm(100, 42, 1, false);
 
 // OPTIONAL : print out max rss memory usage of the process ------------------------------------------------------
-    //double max_memory = get_maxrss_memory();
 
-
-// TESTING : test insert_cell method --- DOES NOT WORK AT THE MOMENT
-
-    //vmesh.insert_cell(Point(0.95, 0.95), N_seeds);
-    //vmesh.save_mesh_to_files(1);
-    //vmesh.insert_cell(Point(0.02, 0.03), N_seeds+1);
-    //vmesh.save_mesh_to_files(2);
-    //vmesh.insert_cell(Point(0.58, 0.58), N_seeds+2);
-    //vmesh.save_mesh_to_files(3);
-    //vmesh.insert_cell(Point(0.4, 0.54), N_seeds+3);
-    //vmesh.save_mesh_to_files(4);
-    //vmesh.insert_cell(Point(0.5, 0.55), N_seeds+4);
-    //vmesh.save_mesh_to_files(5);
-    //vmesh.insert_cell(Point(0.45, 0.02), N_seeds+5);
-    //vmesh.save_mesh_to_files(6);
-    //vmesh.insert_cell(Point(0.9, 0.5), N_seeds+6);
-    //vmesh.save_mesh_to_files(1);
-
-    // for it to work generally the new_cell needs to work even if it touches a boundary
-    // also the adapted cells need to work when they touch a boundary -> DONE
-    // check for degeneracy eg. vertex on vertex -> DONE
-    // built function to do point insertion
-
-    // idee: wenn wir als vertex einen an der boundary kriegen dann geh andersherum bis man dort auch an der boundary angekommen ist
-    // anhand dieser Edges wird die Cell dann mit construct cell anhand dieser Punkte generiert
-
-    //int N_seeds = 10;
-
-    //deque<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, 1);
-
+    // determine maximum memory usage of the whole process
     long long max_memory = get_maxrss_memory();
 
-    cout << "done" << endl;
 
+    cout << "done" << endl;
     return 0;    
 
 }

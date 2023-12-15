@@ -1,11 +1,10 @@
-#include "Point.h"
-#include "Halfplane.h"
 #include <deque>
 #include <vector>
+#include "Point.h"
+#include "Halfplane.h"
 
 #ifndef VoronoiCell_h
 #define VoronoiCell_h
-//using namespace std;
 
 struct intersection
     {
