@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-#include <deque>
 #include "VoronoiCell.h"
 #include "Point.h"
 #include "Halfplane.h"
@@ -18,7 +17,7 @@ VoronoiCell::VoronoiCell(Point in_seed, int in_index) {
 VoronoiCell::~VoronoiCell() {}
 
 // intersect two halfplanes, add that intersection to the first halfplane
-void VoronoiCell::intersect_two_halfplanes(Halfplane &hp1, Halfplane &hp2, deque<intersection> &intersections) {
+void VoronoiCell::intersect_two_halfplanes(Halfplane &hp1, Halfplane &hp2, vector<intersection> &intersections) {
 
     // solve linear system of equations for the two lines
     //calculate Determinant D
@@ -69,7 +68,7 @@ void VoronoiCell::intersect_two_halfplanes(Halfplane &hp1, Halfplane &hp2, deque
 }
 
 // generate all halfplanes + boundary halfplanes
-void VoronoiCell::generate_halfplane_vector(deque<Point> pts,  vector<int> indices) {
+void VoronoiCell::generate_halfplane_vector(vector<Point> pts,  vector<int> indices) {
     
     // generate boundary halfplanes
     halfplanes.push_back(Halfplane(Point(0.5,0.5), Point(0.5,1.5), -1, -2, true));
@@ -120,7 +119,7 @@ double VoronoiCell::get_signed_angle(Point u, Point v) {
 }
 
 // algorithm to construct the cell
-void VoronoiCell::construct_cell(deque<Point> pts, vector<int> indices) {
+void VoronoiCell::construct_cell(vector<Point> pts, vector<int> indices) {
 
     // generate all halfplanes
     generate_halfplane_vector(pts, indices);
@@ -148,7 +147,7 @@ void VoronoiCell::construct_cell(deque<Point> pts, vector<int> indices) {
     Point vertex;
     bool need_to_check_for_degeneracy = false;
 
-    deque<intersection> intersections;
+    vector<intersection> intersections;
 
     //intersect halfplanes for current_hp
     for (int j = 0; j<halfplanes.size(); j++) {
@@ -236,7 +235,7 @@ void VoronoiCell::construct_cell(deque<Point> pts, vector<int> indices) {
 }
 
 // check all vertecies of the cell for equidistance conditions
-bool VoronoiCell::check_equidistance_condition(deque<Point> seeds) {
+bool VoronoiCell::check_equidistance_condition(vector<Point> seeds) {
 
     bool correct_cell = true;
 
@@ -244,7 +243,7 @@ bool VoronoiCell::check_equidistance_condition(deque<Point> seeds) {
     for (int i = 0; i < verticies.size(); i++) {
 
         // only check vertex if it is not on boundary within error margin
-        bool condition = verticies[i].x > 0.00001 && verticies[i].y > 0.00001 && verticies[i].x < 0.99999 && verticies[i].y < 0.99999;
+        bool condition = verticies[i].x > 0.000000000000001 && verticies[i].y > 0.000000000000001 && verticies[i].x < 0.999999999999999 && verticies[i].y < 0.999999999999999;
 
         if (condition) {
 
@@ -273,7 +272,7 @@ bool VoronoiCell::check_equidistance_condition(deque<Point> seeds) {
 
 
                 // if seed has minimum distance add to equidistant points nr
-                if (min_dist - 0.00001 < dist && dist < min_dist + 0.00001) {
+                if (min_dist - 0.000000000000001 < dist && dist < min_dist + 0.000000000000001) {
                     nr_equidist_pts += 1;
                 }
             }
@@ -300,4 +299,16 @@ double VoronoiCell::get_area() {
                        (verticies[i].x - verticies[(i+1)%(verticies.size())].x));
     }
     return area;
+}
+
+long long VoronoiCell::calculate_cell_memory(bool use_capacity) {
+
+    long long total_size;
+    if (use_capacity) {
+        total_size = sizeof(VoronoiCell) + sizeof(Halfplane)*(halfplanes.capacity() + edges.capacity()) + sizeof(Point)*verticies.capacity();
+    } else {
+        total_size = sizeof(VoronoiCell) + sizeof(Halfplane)*(halfplanes.size() + edges.size()) + sizeof(Point)*verticies.size();
+    }
+
+    return total_size;
 }

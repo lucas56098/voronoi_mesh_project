@@ -4,9 +4,9 @@
 #include <iostream>
 #include <set>
 
-VoronoiMesh::VoronoiMesh(deque<Point> points, int N_seeds) {
+VoronoiMesh::VoronoiMesh(vector<Point> points) {
     pts = points;
-    N = N_seeds;
+    total_steps = 0;
 }
 
 VoronoiMesh::~VoronoiMesh() {}
@@ -22,7 +22,7 @@ void VoronoiMesh::construct_mesh() {
 
     for (int i = 0; i < pts.size(); i++) {
 
-        // construct individual cell and add to vcells deque        
+        // construct individual cell and add to vcells vector        
         VoronoiCell vcell(pts[i], i);
         vcell.construct_cell(pts, indices);
         vcells.push_back(vcell);
@@ -64,10 +64,14 @@ int VoronoiMesh::find_cell_index(Point point) {
         }
 
         current_cell = vcells[new_cell_index];
+
+        total_steps += 1;
     } while (!found_cell);
+
 
     return new_cell_index;
 }
+
 
 // function to determine the smallest positive intersection
 void VoronoiMesh::find_smallest_pos_intersect(Halfplane &current_hp, int &current_cell_index, VoronoiCell &new_cell, Point &last_vertex, int &last_cell_index, Point &vertex, Halfplane &edge_hp) {
@@ -77,13 +81,13 @@ void VoronoiMesh::find_smallest_pos_intersect(Halfplane &current_hp, int &curren
                                         + (last_vertex.y - current_hp.midpoint.y)*current_hp.hp_vec.y;
 
     // get intersections of current halfplane with all edges of the current cell
-    deque<intersection> intersections;
+    vector<intersection> intersections;
     for (int i = 0; i<vcells[current_cell_index].edges.size(); i++) {
         new_cell.intersect_two_halfplanes(current_hp, vcells[current_cell_index].edges[i], intersections);
     }
 
     double dist = 42;
-    double epsilon = 0.000000001;
+    double epsilon = 0.000000000000001;
     bool need_to_check_for_degeneracy = false;
 
     // find the intersection with smallest but positive relative distance
@@ -141,6 +145,7 @@ void VoronoiMesh::find_smallest_pos_intersect(Halfplane &current_hp, int &curren
     
 }
 
+
 // function to determine the index of an edge in the edge list of its voronoi cell
 int VoronoiMesh::get_edge_index_in_cell(int &edge_index, VoronoiCell &vcell) {
     
@@ -166,7 +171,7 @@ bool VoronoiMesh::intersection_between_start_stop(int index, Point &new_seed, in
 
 
     // here the start, stop intersection and the hp with boundary intersection will be stored
-    deque<intersection> intersections;
+    vector<intersection> intersections;
     
     // for clarity name all the halfplanes
     Halfplane start_hp = vcells[next_cell_index].edges[(index)%vcells[next_cell_index].edges.size()];
@@ -192,6 +197,14 @@ bool VoronoiMesh::intersection_between_start_stop(int index, Point &new_seed, in
     return false;
 }
 
+void VoronoiMesh::adapt_cell(Halfplane &new_hp, VoronoiCell &vcell) {
+
+// find smallest positive and smallest negative intersection relative to midpoint
+// get their indices
+// remove other indces from edges and include the new hp
+
+}
+
 void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
 
     // find cell the new seed is in
@@ -214,7 +227,7 @@ void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
     Point vertex;
     Halfplane edge_hp;
 
-    find_smallest_pos_intersect(current_hp,current_cell_index,new_cell,last_vertex,last_cell_index, vertex, edge_hp);
+    find_smallest_pos_intersect(current_hp,current_cell_index, new_cell, last_vertex,last_cell_index, vertex, edge_hp);
 
     // store the found edge and vertex in cell
     new_cell.edges.push_back(current_hp);
@@ -239,7 +252,7 @@ void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
                 new_cell.edges.push_back(vcells[current_cell_index].edges[(index+1)%vcells[current_cell_index].edges.size()]);
 
                 // intersect the two boundary edges to get vertex
-                deque<intersection> intersections;
+                vector<intersection> intersections;
                 new_cell.intersect_two_halfplanes(vcells[current_cell_index].edges[index%vcells[current_cell_index].edges.size()], 
                                                     vcells[current_cell_index].edges[(index+1)%vcells[current_cell_index].edges.size()],
                                                     intersections);
@@ -266,7 +279,7 @@ void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
                 // time to leave the boundary and continue in normal fashion
 
                 // get vertex to restart
-                deque<intersection> intersections;
+                vector<intersection> intersections;
                 Halfplane new_hp(new_seed, vcells[current_cell_index].seed, new_seed_index, current_cell_index);
                 new_cell.intersect_two_halfplanes(vcells[current_cell_index].edges[(index+1)%vcells[current_cell_index].edges.size()], new_hp, intersections);
                 Point restart_vertex = intersections[0].intersect_pt;
@@ -320,6 +333,7 @@ void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
 
     } while (!(first_hp.index2 == current_hp.index2) && counter < 10000);
 
+
     // store new_cell in vcells and new point in pts
     vcells.push_back(new_cell);
     pts.push_back(new_seed);
@@ -348,7 +362,7 @@ void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
         }
 
         // make point list with relevant points
-        deque<Point> relevant_points;
+        vector<Point> relevant_points;
         for (int j = 0; j < relevant_pt_indices.size(); j++) {
             relevant_points.push_back(pts[relevant_pt_indices[j]]);
         }
@@ -356,6 +370,8 @@ void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
         // construct adapted cell and store in position of old version of cell
         VoronoiCell adapted_cell(vcells[cells_to_adapt[i]].seed, cells_to_adapt[i]);
         adapted_cell.construct_cell(relevant_points, relevant_pt_indices);
+
+
         vcells[cells_to_adapt[i]] = adapted_cell;
 
     }
@@ -364,7 +380,7 @@ void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
 // perform point insertion algorithm on pts
 void VoronoiMesh::do_point_insertion() {
 
-    deque<Point> all_pts = pts;
+    vector<Point> all_pts = pts;
     pts.clear();
 
     // do the first few points with old algorithm
@@ -557,4 +573,43 @@ bool VoronoiMesh::check_mesh() {
 
     // return total check outcome
     return correct_mesh;
+}
+
+// function to optimize the memory (kinda only makes sense after generating the mesh and not while)
+void VoronoiMesh::optimize_mesh_memory() {
+
+    pts.shrink_to_fit(); 
+    vcells.shrink_to_fit();
+
+    for (int i = 0; i<vcells.size(); i++) {
+
+        vcells[i].edges.shrink_to_fit();
+        vcells[i].halfplanes.shrink_to_fit();
+        vcells[i].verticies.shrink_to_fit();
+
+    }
+
+}
+
+long long VoronoiMesh::calculate_mesh_memory(bool use_capacity) {
+
+    long long total_size;
+    if (use_capacity) {
+    
+            total_size = sizeof(VoronoiMesh) + sizeof(Point)*pts.capacity();
+    
+    } else {
+        
+        total_size = sizeof(VoronoiMesh) + sizeof(Point)*pts.size();
+    
+    }
+
+    for (int i = 0; i<vcells.size(); i++) {
+
+        total_size += vcells[i].calculate_cell_memory(use_capacity);
+
+    }
+
+    return total_size;
+
 }

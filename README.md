@@ -1,9 +1,12 @@
 # voronoi_mesh_project
 Small C++ Project to generate a voronoi mesh using half plane intersection and point insertion. Still work in progress...
 
-### Todos
-- Manually calculate memory usage and compare
+### Ideas
+- Compiler Flags?
+- README with explenation how to use 
 - Different sorting of points?
+- rethink adapt_cells in point insertion
+- progress bars?
 
 ![til](./figures/example_voronoi_animation.gif)
 
@@ -16,3 +19,9 @@ The initial version of the program was still very slow with an O(n^3) scaling. T
 Memory usage for the point insertion algorithm. One can see, that the memory scales linearly. The memory limit could be pushed back by improving the program structure, but honestly i don't see much obvious and easy to implement memory improvement while still knowing the seeds, verticies and edges without recomputing lots of stuff. 
 
 ![Image](./figures/example_memory_benchmark.png)
+
+
+Some notes on memory usage vs time performance. Of course this is a trade of. Here are a few different options i tested. Lets say the benchmark is a standard code without recomputing anything using vectors.
+
+- Changing to deque instead of vector: makes the program 70% faster, increases memory usage 10x
+I would argue, that the memory optimization here is more important because the program is still more memory limited i guess.
