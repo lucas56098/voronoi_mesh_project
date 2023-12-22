@@ -13,6 +13,7 @@ public:
     vector<Point> pts;
     vector<VoronoiCell> vcells;
     long total_steps;
+    int total_frame_counter;
     void construct_mesh();
     void insert_cell(Point new_seed, int new_seed_index);
     void save_mesh_to_files(int nr);

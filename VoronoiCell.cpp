@@ -11,6 +11,9 @@ VoronoiCell::VoronoiCell(Point in_seed, int in_index) {
     
     index = in_index;
     seed = in_seed;
+    halfplanes.reserve(10);
+    edges.reserve(10);
+    verticies.reserve(10);
 
 }
 

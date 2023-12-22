@@ -31,21 +31,39 @@ long long get_maxrss_memory() {
 }
 
 // RANDOM POINTS: function to get a sort index
-int get_sort_index(Point pt, int sort_grid_size) {
+int get_sort_index(Point pt, int sort_grid_size, int sort_scheme) {
 
     double nr = static_cast<double>(sort_grid_size);
 
     int index;
 
-    //int index = static_cast<int>(pt.x * nr) + static_cast<int>(nr * nr * pt.y);
+    // sort by x-y modulo grid
+    if (sort_scheme == 0) {
 
-    if (static_cast<int>(nr * nr * pt.y)%2==0) {
+        if (static_cast<int>(nr * nr * pt.y)%2==0) {
 
-        index = (sort_grid_size - static_cast<int>(pt.x * nr)) + static_cast<int>(nr * nr * pt.y);
+            index = (sort_grid_size - static_cast<int>(pt.x * nr)) + static_cast<int>(nr * nr * pt.y);
 
+        } else {
+
+            index = static_cast<int>(pt.x * nr) + static_cast<int>(nr * nr * pt.y);
+
+        }
+
+    // sort radially outward
+    } else if (sort_scheme == 1) {
+
+        index = static_cast<int>((nr*nr)*sqrt((pt.x-0.5)*(pt.x-0.5) + (pt.y-0.5)*(pt.y-0.5)));
+
+    // sort radially inward
+    } else if (sort_scheme == 2) {
+
+        index = static_cast<int>((nr*nr)*(sqrt(0.5) - sqrt((pt.x-0.5)*(pt.x-0.5) + (pt.y-0.5)*(pt.y-0.5))));
+
+    // all other numbers -> do not sort
     } else {
 
-        index = static_cast<int>(pt.x * nr) + static_cast<int>(nr * nr * pt.y);
+        index = 1;
 
     }
 
@@ -53,7 +71,7 @@ int get_sort_index(Point pt, int sort_grid_size) {
 }
 
 // RANDOM POINTS: generates seed points to use for mesh generation
-vector<Point> generate_seed_points(int N, bool fixed_random_seed, int min, int max, int rd_seed, bool sort_pts, int sort_precision) {
+vector<Point> generate_seed_points(int N, bool fixed_random_seed, double min, int max, int rd_seed, bool sort_pts, int sort_precision, int sort_scheme) {
     vector<Point> points;
 
     unsigned int random_seed;
@@ -88,7 +106,7 @@ vector<Point> generate_seed_points(int N, bool fixed_random_seed, int min, int m
 
         // get sort indices
         for (int i = 0; i < points.size(); i++) {
-            indices.push_back(get_sort_index(points[i], sort_precision));
+            indices.push_back(get_sort_index(points[i], sort_precision, sort_scheme));
             sort_indices.push_back(i);
         }
 
@@ -113,13 +131,38 @@ vector<Point> generate_seed_points(int N, bool fixed_random_seed, int min, int m
     return points;
 }
 
+// UNIFORM POINTS: generates seed points to use for mesh generation
+vector<Point> generate_uniform_seed_points(int N_approx, double min, double max) {
+
+    vector<Point> points;
+    default_random_engine eng;
+    eng = default_random_engine(42);
+
+    double val = 0.0000000000001;
+
+    uniform_real_distribution<double> distr(-val, val);
+
+    for (int i = 0; i<sqrt(N_approx)-1; i++) {
+
+        for (int j = 0; j<sqrt(N_approx)-1; j++) {
+
+            points.push_back(Point(min + max * static_cast<double>(i+1)/static_cast<double>(sqrt(N_approx)) + distr(eng), min + max * static_cast<double>(j+1)/static_cast<double>(sqrt(N_approx))+ distr(eng)));
+
+        }
+
+    }
+
+    return points;
+
+}
+
 // ANIMATION: generates moving mesh and stores it frame by frame in files
 void generate_animation_files(int frames, int seeds) {
     
     // generate initial points and velocities for mesh
     int N_seeds = seeds;
-    vector<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, true, 1000);
-    vector<Point> vel = generate_seed_points(N_seeds, true, -1, 1, 38, false, 1000);
+    vector<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, true, 1000, 0);
+    vector<Point> vel = generate_seed_points(N_seeds, true, -1, 1, 38, false, 1000, 0);
 
     // for each frame generate mesh and store it in files
     for (int i = 0; i < frames; i++) {
@@ -154,10 +197,10 @@ void generate_animation_files(int frames, int seeds) {
 }
 
 // ANIMATION: function to generate files for animation of grid construction
-void animate_algorithm(int N_seeds, int rd_seed, int algorithm, bool sort) {
+void animate_algorithm(int N_seeds, int rd_seed, int algorithm, bool sort, int sort_scheme) {
 
     // generate seed points for animation and its indices
-    vector<Point> pts = generate_seed_points(N_seeds, true, 0, 1, rd_seed, sort, sqrt(N_seeds));
+    vector<Point> pts = generate_seed_points(N_seeds, true, 0, 1, rd_seed, sort, sqrt(N_seeds), sort_scheme);
     vector<int> indices;
     for (int i = 0; i<pts.size(); i++) {
         indices.push_back(i);
@@ -202,7 +245,7 @@ void animate_algorithm(int N_seeds, int rd_seed, int algorithm, bool sort) {
 }
 
 // BENCHMARKING: function to benchmark the mesh generation algorithm, saves times in csv
-void do_benchmarking(string output_file, vector<int> seedvalues, bool append, int algorithm) {
+void do_benchmarking(string output_file, vector<int> seedvalues, bool append, int algorithm, bool sort, int sort_scheme) {
 
     ofstream timing_list;
 
@@ -225,15 +268,17 @@ void do_benchmarking(string output_file, vector<int> seedvalues, bool append, in
         
         // generate seeds for mesh
         int N_seeds = seedvalues[i];
-        vector<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, true, sqrt(N_seeds));
+        vector<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, sort, sqrt(N_seeds), sort_scheme);
     
         // get current time point
         chrono::high_resolution_clock::time_point start_time = chrono::high_resolution_clock::now();
 
         // construct mesh
         VoronoiMesh* vmesh = new VoronoiMesh(pts);
+        //VoronoiMesh vmesh(pts);
         if (algorithm == 0) {
             vmesh->construct_mesh();
+            //vmesh.construct_mesh();
         } else {
             vmesh->do_point_insertion();
         }
@@ -272,11 +317,12 @@ void do_benchmarking(string output_file, vector<int> seedvalues, bool append, in
 int main () {
     
     // generate seeds for mesh
-    int N_seeds = 10;
+    int N_seeds = 20;
 
     cout << "generating points..." << endl;
 
-    vector<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, true, sqrt(N_seeds));
+    vector<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, true, sqrt(N_seeds), 0);
+    //vector<Point> pts = generate_uniform_seed_points(N_seeds, 0, 1);
 
     cout << "start timer..." << endl;
 
@@ -314,6 +360,7 @@ int main () {
 // OPTIONAL : do benchmarking for some seeds ---------------------------------------------------------------------
 
 /*
+
     // choose seed numbers for which the benchmarking should be done
     vector<int> seedvals;
     //seedvals.push_back(1);
@@ -336,51 +383,54 @@ int main () {
     //seedvals.push_back(300000);
     //seedvals.push_back(500000);
     //seedvals.push_back(1000000);
+    //seedvals.push_back(5000000);
 
     for (int i=10000; i< 500000; i+=10000) {
         seedvals.push_back(i);
     }
 
     // name output file
-    string output = "changed_deque_to_vector.csv";
+    string output = "for_memory_benchmark_4.csv";
 
     // do the benchmarking
-    do_benchmarking(output, seedvals, false, 1);  // true or false: append or new file
+    do_benchmarking(output, seedvals, false, 1, true, 0);  // first true or false: append or new file
 
 */
+
    
 // OPTIONAL : generate animations  -------------------------------------------------------------------------------
 
     // animation for a moving mesh
     //generate_animation_files(300, 30);
 
-    //animate_algorithm(1000, 42, 1, true);
+    //animate_algorithm(300, 42, 1, false, 0);
 
 // OPTIONAL : print out max rss memory usage of the process ------------------------------------------------------
 
     // determine maximum memory usage of the whole process
     long long max_memory = get_maxrss_memory();
 
-    long long total_size = vmesh.calculate_mesh_memory(false);
-    cout << "manually calculated mesh size: " << total_size/1024.0/1024.0 << "MB" << endl;
+    //long long total_size = vmesh.calculate_mesh_memory(false);
+    //cout << "manually calculated mesh size: " << total_size/1024.0/1024.0 << "MB" << endl;
 
     long long total_capacity = vmesh.calculate_mesh_memory(true);
     cout << "manually calculated mesh capacity: " << total_capacity/1024.0/1024.0 << "MB" << endl;
 
-    cout << "now optimizing memory" << endl;
+    //cout << "now optimizing memory" << endl;
 
-    vmesh.optimize_mesh_memory();
+    //vmesh.optimize_mesh_memory();
 
-    long long total_size_opt = vmesh.calculate_mesh_memory(false);
-    cout << "manually calculated mesh size: " << total_size_opt/1024.0/1024.0 << "MB" << endl;
+    //long long total_size_opt = vmesh.calculate_mesh_memory(false);
+    //cout << "manually calculated mesh size: " << total_size_opt/1024.0/1024.0 << "MB" << endl;
 
-    long long total_capacity_opt = vmesh.calculate_mesh_memory(true);
-    cout << "manually calculated mesh capacity: " << total_capacity_opt/1024.0/1024.0 << "MB" << endl;
+    //long long total_capacity_opt = vmesh.calculate_mesh_memory(true);
+    //cout << "manually calculated mesh capacity: " << total_capacity_opt/1024.0/1024.0 << "MB" << endl;
 
-    cout << "average step number to find cell:" << endl;
-    cout << static_cast<double>(vmesh.total_steps)/static_cast<double>(vmesh.pts.size()) << endl;
+    //cout << "average step number to find cell:" << endl;
+    //cout << static_cast<double>(vmesh.total_steps)/static_cast<double>(vmesh.pts.size()) << endl;
 
     cout << "done" << endl;
+
     return 0;    
 
 }

@@ -7,6 +7,8 @@
 VoronoiMesh::VoronoiMesh(vector<Point> points) {
     pts = points;
     total_steps = 0;
+    total_frame_counter = 0;
+    //vcells.reserve(pts.size());
 }
 
 VoronoiMesh::~VoronoiMesh() {}
@@ -29,7 +31,6 @@ void VoronoiMesh::construct_mesh() {
     }
 
 }
-
 
 // find cell in which the point is in
 int VoronoiMesh::find_cell_index(Point point) {
@@ -71,7 +72,6 @@ int VoronoiMesh::find_cell_index(Point point) {
 
     return new_cell_index;
 }
-
 
 // function to determine the smallest positive intersection
 void VoronoiMesh::find_smallest_pos_intersect(Halfplane &current_hp, int &current_cell_index, VoronoiCell &new_cell, Point &last_vertex, int &last_cell_index, Point &vertex, Halfplane &edge_hp) {
@@ -145,7 +145,6 @@ void VoronoiMesh::find_smallest_pos_intersect(Halfplane &current_hp, int &curren
     
 }
 
-
 // function to determine the index of an edge in the edge list of its voronoi cell
 int VoronoiMesh::get_edge_index_in_cell(int &edge_index, VoronoiCell &vcell) {
     
@@ -197,14 +196,7 @@ bool VoronoiMesh::intersection_between_start_stop(int index, Point &new_seed, in
     return false;
 }
 
-void VoronoiMesh::adapt_cell(Halfplane &new_hp, VoronoiCell &vcell) {
-
-// find smallest positive and smallest negative intersection relative to midpoint
-// get their indices
-// remove other indces from edges and include the new hp
-
-}
-
+// function to insert a cell into an existing mesh, first generates new_cell and then clips all the cells around as needed
 void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
 
     // find cell the new seed is in
@@ -315,9 +307,6 @@ void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
         if (counter >= 10000) {
 
                     // if counter exeeds limit just generate the cell with the half plane intersection algoithm -> way slower in that case but more robust.
-                    // In my testing however this case only started to occure max once or twice per 100k seeds when the mesh is already way beyond 1 million 
-                    // seeds in total so this catch should not be a big deal
-
                     cout << "Failed to generate cell using pt_insertion. At: " << pts.size() <<  ". try construct_cell" << endl;
                     VoronoiCell alternative_cell(new_seed, new_seed_index);
                     vector<int> pts_indices;
@@ -330,52 +319,122 @@ void VoronoiMesh::insert_cell(Point new_seed, int new_seed_index) {
                 }
     }
 
-
     } while (!(first_hp.index2 == current_hp.index2) && counter < 10000);
 
+    // vector memory management
+    new_cell.halfplanes.shrink_to_fit();
+    new_cell.edges.shrink_to_fit();
+    new_cell.verticies.shrink_to_fit();
 
     // store new_cell in vcells and new point in pts
     vcells.push_back(new_cell);
     pts.push_back(new_seed);
 
-    // find indices for which the cells need to be adapted
-    vector<int> cells_to_adapt;
+
+    // clipping all the neighbour cells
+    // loop through all edges of new cell
     for (int i = 0; i<new_cell.edges.size(); i++) {
-        if (new_cell.edges[i].index2 >= 0) {
-            cells_to_adapt.push_back(new_cell.edges[i].index2);
-        }
-    }
+ 
+        Halfplane edge = new_cell.edges[i];
 
-    // adapt each of the cells that need ot be adapted
-    for (int i = 0; i < cells_to_adapt.size(); i++) {
+        // start and end named in perspective of cell to adapt
+        Point v_end = new_cell.verticies[(i-1 + new_cell.verticies.size())%new_cell.verticies.size()];
+        Point v_start = new_cell.verticies[i];
 
-        // find indices of relevant points with respect to adapting given cell
-        vector<int> relevant_pt_indices;
-        relevant_pt_indices.push_back(cells_to_adapt[i]);
-        relevant_pt_indices.push_back(new_seed_index);
+        // only adapt cell if not boundary
+        if (edge.index2 >= 0) {
 
-        for (int j = 0; j < vcells[cells_to_adapt[i]].edges.size(); j++) {
+            // get cell to adapt, start index and end index and edge to insert
+            VoronoiCell cell_to_adapt = vcells[edge.index2];
+            int edge_start_index = get_edge_index_in_cell(new_cell.edges[(i+1)%new_cell.edges.size()].index2, cell_to_adapt);
+            int edge_end_index = get_edge_index_in_cell(new_cell.edges[(i-1 + new_cell.edges.size())%new_cell.edges.size()].index2, cell_to_adapt);
+            Halfplane edge_to_insert(pts[edge.index2], pts[edge.index1], edge.index2, edge.index1);
 
-            if (vcells[cells_to_adapt[i]].edges[j].index2 >= 0) {
-                relevant_pt_indices.push_back(vcells[cells_to_adapt[i]].edges[j].index2);
+            // simple case if the end of the vector is not crossed
+            if (edge_start_index < edge_end_index) {
+
+                // adapt edges
+                cell_to_adapt.edges.erase(cell_to_adapt.edges.begin() + edge_start_index + 1, cell_to_adapt.edges.begin() + edge_end_index);
+                cell_to_adapt.edges.insert(cell_to_adapt.edges.begin() + edge_start_index + 1, edge_to_insert);
+
+                // adapt verticies
+                cell_to_adapt.verticies.erase(cell_to_adapt.verticies.begin() + edge_start_index, cell_to_adapt.verticies.begin() + edge_end_index);
+                cell_to_adapt.verticies.insert(cell_to_adapt.verticies.begin() + edge_start_index, v_start);
+                cell_to_adapt.verticies.insert(cell_to_adapt.verticies.begin() + edge_start_index + 1, v_end);
+
+            // more complex case if the end of the vector is crossed during clipping. conceptually doing exactly the same but kind of an index mess
+            } else if (edge_start_index > edge_end_index) {
+
+                // erase edges
+                if (edge_start_index < cell_to_adapt.edges.size()-1) {
+                    cell_to_adapt.edges.erase(cell_to_adapt.edges.begin() + edge_start_index + 1, cell_to_adapt.edges.end());
+                }
+                cell_to_adapt.edges.erase(cell_to_adapt.edges.begin(), cell_to_adapt.edges.begin() + edge_end_index);
+
+                // erase verticies
+                cell_to_adapt.verticies.erase(cell_to_adapt.verticies.begin() + edge_start_index, cell_to_adapt.verticies.end());
+
+                // adapt verticies and edges
+                if (edge_end_index > 0) {
+                    cell_to_adapt.verticies.erase(cell_to_adapt.verticies.begin(), cell_to_adapt.verticies.begin() + edge_end_index );
+                    cell_to_adapt.verticies.insert(cell_to_adapt.verticies.end(), v_start);
+                    cell_to_adapt.verticies.insert(cell_to_adapt.verticies.begin(), v_end);
+                    cell_to_adapt.edges.insert(cell_to_adapt.edges.begin(), edge_to_insert);
+                // also adapt verticies and edges but nothing to delete now
+                } else {
+                    cell_to_adapt.verticies.insert(cell_to_adapt.verticies.end(), v_start);
+                    cell_to_adapt.verticies.insert(cell_to_adapt.verticies.end(), v_end);
+                    cell_to_adapt.edges.push_back(edge_to_insert);
+                }       
+            } else {
+                cout << "while adapting cell: start and end index are the same. that shouldnt happen" << endl;
             }
+
+            // restore property that index 0 is the one with seed closest to cell_to_adapt.seed
+            // for that calculate distances
+            double new_dist = sqrt((edge_to_insert.midpoint.x-cell_to_adapt.seed.x)*(edge_to_insert.midpoint.x-cell_to_adapt.seed.x)
+                                    + (edge_to_insert.midpoint.y-cell_to_adapt.seed.y)*(edge_to_insert.midpoint.y-cell_to_adapt.seed.y));
+            
+            double old_dist = sqrt((cell_to_adapt.edges[0].midpoint.x-cell_to_adapt.seed.x)*(cell_to_adapt.edges[0].midpoint.x-cell_to_adapt.seed.x)
+                                    + (cell_to_adapt.edges[0].midpoint.y-cell_to_adapt.seed.y)*(cell_to_adapt.edges[0].midpoint.y-cell_to_adapt.seed.y));
+
+            // resort edge vector if new dist < old dist
+            if (new_dist < old_dist) {
+
+                vector<Halfplane> new_edge_list;
+                vector<Point> new_verticies_list;
+
+                // get index of inserted edge in cell to adapt
+                int index;
+                for (int j = 0; j < cell_to_adapt.edges.size(); j++) {
+                    if (edge_to_insert.index2 == cell_to_adapt.edges[j].index2) {
+                        index = j;
+                    }
+                }
+
+                // resort the vector
+                for (int j = index; j<cell_to_adapt.edges.size()+index; j++) {
+                    new_edge_list.push_back(cell_to_adapt.edges[j%cell_to_adapt.edges.size()]);
+                    new_verticies_list.push_back(cell_to_adapt.verticies[j%cell_to_adapt.verticies.size()]);
+                }
+                cell_to_adapt.edges = new_edge_list;
+                cell_to_adapt.verticies = new_verticies_list;
+
+            }
+
+            // replace vcell with clipped vcell
+            vcells[edge.index2] = cell_to_adapt;
+        
         }
 
-        // make point list with relevant points
-        vector<Point> relevant_points;
-        for (int j = 0; j < relevant_pt_indices.size(); j++) {
-            relevant_points.push_back(pts[relevant_pt_indices[j]]);
-        }
-
-        // construct adapted cell and store in position of old version of cell
-        VoronoiCell adapted_cell(vcells[cells_to_adapt[i]].seed, cells_to_adapt[i]);
-        adapted_cell.construct_cell(relevant_points, relevant_pt_indices);
-
-
-        vcells[cells_to_adapt[i]] = adapted_cell;
+        // uncomment this and remove any file saving in main to get animation with clipping
+        //save_mesh_to_files(total_frame_counter);
+        //total_frame_counter += 1;
 
     }
+   
 }
+
 
 // perform point insertion algorithm on pts
 void VoronoiMesh::do_point_insertion() {
@@ -559,7 +618,7 @@ bool VoronoiMesh::check_mesh() {
     // second check : area
     double total_area = check_area();
     cout << "total area = " << total_area << "+" << total_area - 1 << endl;
-    if (total_area > 1 + 0.000001 && total_area < 1 - 0.000001) {
+    if (total_area > 1 + 0.000001 || total_area < 1 - 0.000001) {
         correct_mesh = false;
     }
 
