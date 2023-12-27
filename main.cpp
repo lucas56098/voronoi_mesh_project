@@ -560,7 +560,7 @@ int main (int argc, char *argv[]) {
             cout << setw(21) << "" << "2 - radially outward" << endl;
             cout << setw(21) << "" << "3 - radially inward" << endl;
             cout << "-check             : check mesh for correctness (for large point sets takes way longer than grid generation)" << endl;
-            cout << "-algorihm          : specify the algorithm used" << endl;
+            cout << "-algorithm          : specify the algorithm used" << endl;
             cout << setw(21) << "" << "0 - halfplane intersection O(n^2)" << endl;
             cout << setw(21) << "" << "1 - point insertion O(nlogn) (standard option)" << endl;
             cout << "-image             : plot image of mesh using python matplotlib and save file" << endl;

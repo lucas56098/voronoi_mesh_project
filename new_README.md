@@ -150,7 +150,7 @@ Now that we have a working installation here is an overview of what you can do w
 
 `-check`                            : check mesh for correctness (for large point sets takes way longer than grid generation)
 
-`-algorihm [int algorithm]`         : specify the algorithm used
+`-algorithm [int algorithm]`         : specify the algorithm used
 
                      0 - halfplane intersection O(n^2)
 
@@ -162,15 +162,15 @@ The next options are specific and not compatible with all of the options above!
 
 `-benchmark`                        : benchmark algorithm, save benchmarking files and plot time and memory benchmark using python matplotlib
 
-                                    ! benchmarking is not compatible with -n, -check, -image, - gganim, -mmanim !
+! benchmarking is not compatible with -n, -check, -image, - gganim, -mmanim !
 
 `-mmanim [int N_frames] [int fps]`  : moving mesh animation, specify (frames) (fps)
 
-                                    ! Moving Mesh Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -gganim !
+! Moving Mesh Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -gganim !
 
 `-gganim [int fps]`                 : grid generation animation, specify (fps)
 
-                                    ! Grid Generation Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -mmanim !
+! Grid Generation Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -mmanim !
 
 
 If anything is unclear:
