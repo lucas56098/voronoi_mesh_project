@@ -81,9 +81,11 @@ For peformance benchmarking the time the generation took on my PC (MacBook Pro M
 
 ## Correctness checks
 Checking the mesh after generation is an important part to verify that the algorithm works as expected. For that we try to check different properies a voronoi mesh should have. We do the following checks: 
+
 - `check_equidistance()`: Test if every vertex has at least three equidistant seedpoints. (Definition of a vertex)
 - `check_area()` : Compute the total area of all cells added up. (Should equal 1 up to some finite precision limits)
-- `check_neighbours` : Test if every neigbour of a cell has that cell as a neigbour as well.
+- `check_neighbours()` : Test if every neigbour of a cell has that cell as a neigbour as well.
+
 Checks can be activated using `-check` as an option in the command line interface. However one should note that for large point sets the mesh generation is way faster than the correctness checks so i would not recommend to use them only if really needed for very huge point sets.
 
 ## Getting started
@@ -126,8 +128,29 @@ The program is now build and can be run using `./vmp`. For example one could try
 If everything works fine the grid will be generated for 100 seeds and stored into `build/files`. Also the grid will be plotted using python and the final image will be stored as `figures/single_picture.pdf`. It should look something like this:
 <p align="left">
   <img src="./figures/readme_figures/getting_started_terminal.png" alt="terminal" width="566" height="400">
-  <img src="./figures/readme_figures/getting_started_plot.png" alt="figure" width="436" height="400">
+  <img src="./figures/readme_figures/getting_started_plot.png" alt="figure" width="400" height="400">
 </p>
 
-
 ## Run options
+Now that we have a working installation here is an overview of what you can do with the command line interface.
+
+`-n`                 : specify the number of seedpoints
+`-fixed_seed`        : fix the random seed and specify it
+`-sort_option`       : specify persorting of points
+                     0 - no sort
+                     1 - modulo sort (standard option)
+                     2 - radially outward
+                     3 - radially inward
+`-check`             : check mesh for correctness (for large point sets takes way longer than grid generation)
+`-algorihm`          : specify the algorithm used
+                     0 - halfplane intersection O(n^2)
+                     1 - point insertion O(nlogn) (standard option)
+`-image`             : plot image of mesh using python matplotlib and save file
+`-benchmark`         : benchmark algorithm, save benchmarking files and plot time and memory benchmark using python matplotlib
+                     ! benchmarking is not compatible with -n, -check, -image, - gganim, -mmanim !
+`-mmanim`            : moving mesh animation, specify (frames) (fps)
+                     ! Moving Mesh Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -gganim !
+`-gganim`            : grid generation animation, specify (fps)
+                     ! Grid Generation Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -mmanim !
+`-h`,`-help`,`--help`: show this window and exit
+
