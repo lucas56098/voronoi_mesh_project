@@ -39,30 +39,30 @@ For the visualization in python the following packages are needed:
 Start by going into the folder where you want to clone the repository into and do:
 
 ```bash
-$ git clone https://github.com/lucas56098/voronoi_mesh_project.git
+git clone https://github.com/lucas56098/voronoi_mesh_project.git
 ```
 
 Then go into the voronoi_mesh_project, create a build folder and go into that as well.
 
 ```bash
-$ cd voronoi_mesh_project
-$ mkdir build
-$ cd build
+cd voronoi_mesh_project
+mkdir build
+cd build
 ```
 
 In that folder make two needed directories and build the program using cmake
 
 ```bash
-$ mkdir files
-$ mkdir benchmarks
-$ cmake ..
-$ cmake --build .
+mkdir files
+mkdir benchmarks
+cmake ..
+cmake --build .
 ```
 
 The program is now build and can be run using `./vmp`. For example one could try
 
 ```bash
-$ ./vmp -n 100 -image
+./vmp -n 100 -image
 ```
 
 If everything works fine the grid will be generated for 100 seeds and stored into `build/files`. Also the grid will be plotted using python and the final image will be stored as `figures/single_picture.pdf`.
