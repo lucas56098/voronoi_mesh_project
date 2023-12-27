@@ -3,9 +3,6 @@ Small C++ project to generate a voronoi mesh using a naive halfplane intersectio
 
 #### Table of contents
 1. [Introduction](#introduction)
-<p align="right">
-  <img src="./figures/readme_figures/example_voronoi_animation.gif" alt="moving_mesh" width="400" height="400">
-</p>
 2. [Naive Halfplane Intersection](#naive-halfplane-intersection)
 3. [Point Insertion](#point-insertion)
 4. [Performance and memory usage](#performance-and-memory-usage)
@@ -13,23 +10,11 @@ Small C++ project to generate a voronoi mesh using a naive halfplane intersectio
 6. [Getting started](#getting-started)
 7. [Run options](#run-options)
 
-
-## Introduction
 <p align="left">
   <img src="./figures/readme_figures/example_voronoi_animation.gif" alt="moving_mesh" width="400" height="400">
 </p>
 
-<div>
-  <p align="left">
-    Your text goes here.
-  </p>
-  <p align="right">
-    <img src="your_gif_url_here" alt="Your GIF">
-  </p>
-</div>
-
-Hallo  ![Image](url_to_your_image) Your text goes here.
-
+## Introduction
 A `VoronoiCell` is a polygonal region surrounding a specific point in a space, encompassing all locations that are closer to that point than to any other point in a given set of points. The edges of that voronoi cell are part of the perpendicular bisectors to the neigbouring points. In the following we will continue calling those perpendicular bisectors `Halfplane` and the midpoint of such a voronoi cell `seed`. The voronoi cells of all points in the set combined are called a `VoronoiMesh`. Voronoi meshes can be used in many applications. One such application for example are cosmological hydrodynamical simulations like [IllustrisTNG](https://www.tng-project.org) based on codes like [AREPO](https://github.com/dnelson86/arepo), where a moving voronoi mesh is used as a grid for the hydrodynamics and therefore needs to be regenerated for every timestep. While moving vornoi meshes, as a compromise between SPH and AMR, help with shock treatment and also make the code gallilean invariant this of course comes at a substential computing cost. Fast and reliable algorithms for generating voronoi meshes in 3D therefore are very useful to do such simulations. Due to the limited time of my project internship we however sticked to 2D algorithms.
 Voronoi mesh generation algorithms can be divided into direct and indirect algorithms, where the indirect algorithms first generate a delunay triangulation and then use the geometric duality to the voronoi tesselation to construct the mesh. While codes like [AREPO](https://github.com/dnelson86/arepo) work using an indirect approach we focused on directly generating a voronoi mesh.
 The two algorithms we looked at are a naive halfplane intersection algorithm which at best scales with $\mathcal{O}(n^2)$ and a point insertion algorithm that at best scales with $\mathcal{O}(n\log{n})$. Many thanks do Dylan and Chris who guided me through this project. It was a lot of fun!
