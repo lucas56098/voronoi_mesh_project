@@ -75,8 +75,8 @@ Degeneracies are important to get right for a robust handling of special cases. 
 ## Performance and memory usage
 For peformance benchmarking the time the generation took on my PC (MacBook Pro M1) was plotted as a function of points to generate. If you want to try some benchmarking for yourself feel free to use the `-benchmark` option in the command line interface. As one can see the algorithms scale as expected. In addition also an even more naive hp intersection scaling with $\mathcal{O}(n^3)$ is shown which however is not included in the final code. Also one can see that the sorting of the points according to the modulo sort is the final piece in the puzzle to archieve $\mathcal{O}(n\log{n})$ scaling, because otherwise for very large point sets the `find_cell_index()` function scales worse and it takes many steps to reach the cell where the point is in. Memorywise some improvements defenitely still can be made but i think it is quite hard to do this without the need to recompute stuff in the program or lose the quick acess to the vertecies. The memory grows approximately linear wich is kind of expected. In addition to that the maximum rss memory usage is still higher than the final mesh size because of the generation algorithms also taking up memory while running.
 <p align="left">
-  <img src="./figures/readme_figures/example_benchmark.png" alt="benchmark" width="533" height="400">
-  <img src="./figures/readme_figures/example_memory_benchmark.png" alt="memory_benchmark" width="533" height="400">
+  <img src="./figures/readme_figures/example_benchmark.png" alt="benchmark" width="500" height="375">
+  <img src="./figures/readme_figures/example_memory_benchmark.png" alt="memory_benchmark" width="500" height="375">
 </p>
 
 ## Correctness checks
