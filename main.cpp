@@ -565,7 +565,7 @@ int main (int argc, char *argv[]) {
             cout << setw(21) << "" << "1 - point insertion O(nlogn) (standard option)" << endl;
             cout << "-image             : plot image of mesh using python matplotlib and save file" << endl;
             cout << "-benchmark         : benchmark algorithm, save benchmarking files and plot time and memory benchmark using python matplotlib" << endl;
-            cout << setw(21) << "" << "! benchmarking is not compatible with -n, -check, -image !" << endl;
+            cout << setw(21) << "" << "! benchmarking is not compatible with -n, -check, -image, - gganim, -mmanim !" << endl;
             cout << "-mmanim            : moving mesh animation, specify (frames) (fps)" << endl;
             cout << setw(21) << "" << "! Moving Mesh Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -gganim !" << endl;
             cout << "-gganim            : grid generation animation, specify (fps)" << endl;
@@ -652,7 +652,7 @@ int main (int argc, char *argv[]) {
         // choose seed numbers for which the benchmarking should be done
         vector<int> seedvals;
         //seedvals.push_back(1);
-    
+        
         seedvals.push_back(10);
         seedvals.push_back(30);
         seedvals.push_back(50);
@@ -673,6 +673,12 @@ int main (int argc, char *argv[]) {
             seedvals.push_back(500000);
             seedvals.push_back(1000000);
         }
+        
+
+        //seedvals.push_back(10);
+        //for (int i = 10000; i< 500000; i+= 10000) {
+        //    seedvals.push_back(i);
+        //}
 
         // name output file
         string output = "benchmark.csv";

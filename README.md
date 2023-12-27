@@ -31,6 +31,7 @@ Befor starting make sure you have the following installed:
 
 - C++ with a working compiler
 - CMake (optional one can manually build the project)
+- Git (alternatively the git clone in the getting started can be replaced by just downloading the files manually)
 
 For the visualization in python the following packages are needed:
 - argparse, time, tqdm, matplotlib, numpy, PIL, scipy
@@ -50,11 +51,9 @@ mkdir build
 cd build
 ```
 
-In that folder make two needed directories and build the program using cmake
+In that folder build the program using cmake
 
 ```bash
-mkdir files
-mkdir benchmarks
 cmake ..
 cmake --build .
 ```
@@ -62,7 +61,7 @@ cmake --build .
 The program is now build and can be run using `./vmp`. For example one could try
 
 ```bash
-./vmp -n 100 -image
+./vmp -n 100 -fixed_seed 42 -image
 ```
 
 If everything works fine the grid will be generated for 100 seeds and stored into `build/files`. Also the grid will be plotted using python and the final image will be stored as `figures/single_picture.pdf`.

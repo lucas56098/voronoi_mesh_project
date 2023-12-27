@@ -31,7 +31,6 @@ private:
     int get_edge_index_in_cell(int &edge_index, VoronoiCell &vcell);
     bool intersection_between_start_stop(int index, Point &new_seed, int &new_seed_index, int &next_cell_index, 
                                             VoronoiCell &new_cell);
-    void adapt_cell(Halfplane &new_hp, VoronoiCell &vcell);
 
 };
 
