@@ -4,9 +4,16 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <cstdlib>
 #include <sys/resource.h>
 #include "Point.h"
 #include "VoronoiMesh.h"
+
+// ANSI escape codes for text colors
+#define RED_TEXT "\033[1;31m"
+#define ORANGE_TEXT "\033[1;33m"
+#define RESET_COLOR "\033[0m"
+#define GREEN_TEXT "\033[1;32m"
 
 // MEMORY: function to print out maximum memory usage
 long long get_maxrss_memory() {
@@ -38,7 +45,7 @@ int get_sort_index(Point pt, int sort_grid_size, int sort_scheme) {
     int index;
 
     // sort by x-y modulo grid
-    if (sort_scheme == 0) {
+    if (sort_scheme == 1) {
 
         if (static_cast<int>(nr * nr * pt.y)%2==0) {
 
@@ -51,12 +58,12 @@ int get_sort_index(Point pt, int sort_grid_size, int sort_scheme) {
         }
 
     // sort radially outward
-    } else if (sort_scheme == 1) {
+    } else if (sort_scheme == 2) {
 
         index = static_cast<int>((nr*nr)*sqrt((pt.x-0.5)*(pt.x-0.5) + (pt.y-0.5)*(pt.y-0.5)));
 
     // sort radially inward
-    } else if (sort_scheme == 2) {
+    } else if (sort_scheme == 3) {
 
         index = static_cast<int>((nr*nr)*(sqrt(0.5) - sqrt((pt.x-0.5)*(pt.x-0.5) + (pt.y-0.5)*(pt.y-0.5))));
 
@@ -157,12 +164,12 @@ vector<Point> generate_uniform_seed_points(int N_approx, double min, double max)
 }
 
 // ANIMATION: generates moving mesh and stores it frame by frame in files
-void generate_animation_files(int frames, int seeds) {
+void generate_animation_files(int frames, int seeds, bool fixed_seed, int rd_seed) {
     
     // generate initial points and velocities for mesh
     int N_seeds = seeds;
-    vector<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, true, 1000, 0);
-    vector<Point> vel = generate_seed_points(N_seeds, true, -1, 1, 38, false, 1000, 0);
+    vector<Point> pts = generate_seed_points(N_seeds, fixed_seed, 0, 1, rd_seed, true, 1000, 1);
+    vector<Point> vel = generate_seed_points(N_seeds, fixed_seed, -1, 1, rd_seed, false, 1000, 0);
 
     // for each frame generate mesh and store it in files
     for (int i = 0; i < frames; i++) {
@@ -190,9 +197,12 @@ void generate_animation_files(int frames, int seeds) {
         VoronoiMesh vmesh(pts);
         vmesh.do_point_insertion();
         vmesh.save_mesh_to_files(i);
-        cout << i << endl;
+        cout << fixed << (i+1) << "/" << (frames) << "\r";
+        cout.flush();
 
     }
+
+    cout << endl;
 
 }
 
@@ -238,14 +248,17 @@ void animate_algorithm(int N_seeds, int rd_seed, int algorithm, bool sort, int s
             }
             vmesh.save_mesh_to_files(i-1);
         }
-        cout << i-1 << endl;
+        cout << fixed << i << "/" << N_seeds-1 << "\r";
+        cout.flush();
 
     }
+
+    cout << endl;
 
 }
 
 // BENCHMARKING: function to benchmark the mesh generation algorithm, saves times in csv
-void do_benchmarking(string output_file, vector<int> seedvalues, bool append, int algorithm, bool sort, int sort_scheme) {
+void do_benchmarking(string output_file, vector<int> seedvalues, bool append, int algorithm, bool sort, int sort_scheme, bool fixed_seed, int rd_seed) {
 
     ofstream timing_list;
 
@@ -261,14 +274,14 @@ void do_benchmarking(string output_file, vector<int> seedvalues, bool append, in
     memory_list = ofstream("benchmarks/memory_" + output_file);
     memory_list << "nr_seeds,rss_memory_usage_in_bytes\n";
 
-    cout << "Start Benchmarking" << endl;
+    cout << "Start Benchmarking: 0 to " << seedvalues.size()-1 << endl;
 
     // do benchmark for each seedvalue size
     for (int i = 0; i < seedvalues.size(); i++) {
         
         // generate seeds for mesh
         int N_seeds = seedvalues[i];
-        vector<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, sort, sqrt(N_seeds), sort_scheme);
+        vector<Point> pts = generate_seed_points(N_seeds, fixed_seed, 0, 1, rd_seed, sort, sqrt(N_seeds), sort_scheme);
     
         // get current time point
         chrono::high_resolution_clock::time_point start_time = chrono::high_resolution_clock::now();
@@ -312,122 +325,381 @@ void do_benchmarking(string output_file, vector<int> seedvalues, bool append, in
 
 }
 
+// CLI: test wether part of command line input is integer
+bool is_integer(const string& str) {
+    try {
+        // Use std::stoi for string to integer conversion with error checking
+        stoi(str);
+        return true;  // If no exception is thrown, it's a valid integer
+    } catch (const invalid_argument& e) {
+        // std::invalid_argument is thrown if no conversion could be performed
+        return false;
+    } catch (const out_of_range& e) {
+        // std::out_of_range is thrown if the converted value would fall out of the range of the result type
+        return false;
+    }
+}
 
-// MAIN : generate voronoi mesh for given seed number and stop time for that -------------------------------------
-int main () {
+// MAIN :  -------------------------------------------------------------------------------------------------------
+int main (int argc, char *argv[]) {
     
-    // generate seeds for mesh
+    // Standard Values for CLI options
     int N_seeds = 20;
-
-    cout << "generating points..." << endl;
-
-    vector<Point> pts = generate_seed_points(N_seeds, true, 0, 1, 42, true, sqrt(N_seeds), 0);
-    //vector<Point> pts = generate_uniform_seed_points(N_seeds, 0, 1);
-
-    cout << "start timer..." << endl;
-
-    // get the current time point before the code execution
-    chrono::high_resolution_clock::time_point start_time = chrono::high_resolution_clock::now();
-
-    // construct mesh
-    VoronoiMesh vmesh(pts);
-    //vmesh.construct_mesh();               // <-- O(n^2) scaling half plane intersection
-    vmesh.do_point_insertion();             // <-- O(nlogn) scaling point insertion algoithm
-
-    // get the current time point after the code execution
-    chrono::high_resolution_clock::time_point end_time = chrono::high_resolution_clock::now();
-
-    // calculate the duration of the code execution
-    chrono::microseconds duration = chrono::duration_cast<chrono::microseconds>(end_time - start_time);
-
-    cout << "end timer..." << endl;
-
-    // output the duration in microseconds
-    cout << "Execution time: " << duration.count() << " microseconds" << endl;
-
-    // save mesh to file
-    cout << "saving mesh to file..." << endl;
-    vmesh.save_mesh_to_files(0);
+    bool fixed_seed = false;
+    int rd_seed = 42;
+    bool sort = true;
+    int sort_scheme = 1;
+    bool check_option = false;
+    int run_option = 0;         // run options: 0: normal_mesh, 1: benchmark, 2: moving mesh animation, 3: grid generation animation
+    int algorithm = 1;      // 1: pt_insertion, 0: hp_intersection, rest: also pt_insertion
+    bool image_condition = false;
+    bool need_help = false;
+    int frames = 100;
+    int fps = 20;
 
 
-// OPTIONAL : do correctness checks ------------------------------------------------------------------------------
+    // READ OUT CLI to start program with correct options
+    // loop through all cli arguments
+    for (int i = 0; i < argc; i++) {
+        bool found_command = false;
 
-    // check mesh for correctness
-    //bool tests = vmesh.check_mesh();                            // <-- usually take longer then generating the grid
-    //cout << "all tests: " << boolalpha << tests << endl;
+        // option for seed number
+        if (strcmp(argv[i], "-n") == 0 && argc > i+1) {
+            found_command = true;
+            if (is_integer(argv[i+1])) {
+                N_seeds = stoi(argv[i+1]);
+                cout << GREEN_TEXT << "CLI OPTION: " << RESET_COLOR << "Seed number = " << N_seeds << endl;
+            } else {
+                cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Specified seed number is not an integer: " << argv[i] << " " << argv[i+1] << endl;
+                cout << setw(11) << "" << "Continuing with standard value for -n: " << N_seeds << endl;
+            }
+        } else if (strcmp(argv[i], "-n") == 0 && argc <= i+1) {
+            found_command = true;
+            cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Called -n but not specified seed number. Use: -n (your_seed_number) instead" << endl;
+        }
+
+        // option to fix random seed
+        if (strcmp(argv[i], "-fixed_seed") == 0 && argc > i+1) {
+            found_command = true;
+            if (is_integer(argv[i+1])) {
+                rd_seed = stoi(argv[i+1]);
+                fixed_seed = true;
+                cout << GREEN_TEXT << "CLI OPTION: " << RESET_COLOR << "fixed seed = " << rd_seed << endl;
+            } else {
+                fixed_seed = true;
+                cout << ORANGE_TEXT << "CLI WARNING: " << RESET_COLOR << "Fixed random seed but not specified any number" << endl;
+                cout << setw(13) << "" << "Continuing with standard value for -fixed_seed: 42" << endl;
+            }
+        } else if (strcmp(argv[i], "-fixed_seed") == 0 && argc <= i+1) {
+            found_command = true;
+            fixed_seed = true;
+            cout << ORANGE_TEXT << "CLI WARNING: " << RESET_COLOR << "Fixed random seed but not specified any number" << endl;
+            cout << setw(13) << "" << "Continuing with standard value for -fixed_seed: 42" << endl;
+        }
+
+        // option to sort random seeds
+        if (strcmp(argv[i], "-sort_option") == 0 && argc > i+1) {
+            found_command = true;
+            if (is_integer(argv[i+1])) {
+                sort_scheme = stoi(argv[i+1]);
+                if (sort_scheme == 0) {
+                    sort = false;
+                } else {
+                    sort = true;
+                }
+                cout << GREEN_TEXT << "CLI OPTION: " << RESET_COLOR << "Sort Option = " << sort << endl;
+            } else {
+                cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Sort scheme is not a valid integer. Use: -sort (0, 1, 2, 3) where" << 
+                        endl << setw(11) << "" << "0:no sort, 1: modulo sort, 2: radially outward, 3: radially inward" << endl;
+                cout << setw(11) << "" << "Continuing with standard sort option: 1 -> modulo sort" << endl;
+            }
+        } else if (strcmp(argv[i], "-sort_option") == 0 && argc <= i+1) {
+            found_command = true;
+            cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "did not specify an sort scheme after using -sort. Use: -sort (0, 1, 2, 3) where" << 
+                    endl << setw(11) << "" << "0:no sort, 1: modulo sort, 2: radially outward, 3: radially inward" << endl;
+            cout << setw(11) << "" << "Continuing with standard sort option: 1 -> modulo sort" << endl;
+        }
+
+        // option to check the mesh after generation
+        if (strcmp(argv[i], "-check") == 0) {
+            found_command = true;
+            check_option = true;
+            cout << GREEN_TEXT << "CLI OPTION: " << RESET_COLOR << "Check" << endl;
+        }
+
+        // option to change algorithm
+        if (strcmp(argv[i], "-algorithm") == 0 && argc > i+1) {
+            found_command = true;
+            if (is_integer(argv[i+1])) {
+                algorithm = stoi(argv[i+1]);
+                cout << GREEN_TEXT << "CLI OPTION: " << RESET_COLOR << "Algorithm = " << algorithm << endl;
+            } else {
+                cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Specified algorithm is not an integer: " << argv[i] << " " << argv[i+1] << endl;
+                cout << setw(11) << "" << "Continuing with standard algorithm: point_insertion " << endl;
+            }
+        } else if (strcmp(argv[i], "-algorithm") == 0 && argc <= i+1) {
+            found_command = true;
+            cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Called -algorithm but not specified it. Use: -algorithm (your_algorithm_number) instead" << endl;
+            cout << setw(11) << "" << "Continuing with standard algorithm: point_insertion " << endl;
+        }
+
+        // option to directly plot image of generated mesh
+        if (strcmp(argv[i], "-image") == 0) {
+            found_command = true;
+            image_condition = true;
+            cout << GREEN_TEXT << "CLI OPTION: " << RESET_COLOR << "Image" << endl;
+        }
+
+        // option to do benchmarks
+        if (strcmp(argv[i], "-benchmark") == 0) {
+            found_command = true;
+            run_option = 1;
+            bool correct_benchmark = true;
+
+            for (int j = 0; j<argc; j++) {
+                if(strcmp(argv[j], "-check") == 0 || strcmp(argv[j], "-n") == 0 || strcmp(argv[j], "-image") == 0) {
+                    cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Benchmark is not compatible with -check, -n, -image. Check wether you specified any of these" << endl;
+                    correct_benchmark = false;
+                }
+            }
+            if (correct_benchmark) {
+                cout << GREEN_TEXT << "CLI OPTION: " << RESET_COLOR << "Benchmark" << endl;
+            }
+
+        }
+
+        // option to animate moving mesh
+        if (strcmp(argv[i], "-mmanim") == 0 && argc > i+2) {
+            found_command = true;
+            run_option = 2;
+            bool correct_benchmark = true;
+
+            if (is_integer(argv[i+1]) && is_integer(argv[i+2])) {
+                frames = atoi(argv[i+1]);
+                fps = atoi(argv[i+2]);
+            } else {
+                cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Specified numbers are not integer: " << argv[i] << " " << argv[i+1] << " " << argv[i+2] << endl;
+                correct_benchmark = false;
+            }
+
+            for (int j = 0; j<argc; j++) {
+                if (strcmp(argv[i], "-sort_option") == 0 || strcmp(argv[i], "-check") == 0 || strcmp(argv[i], "-algorithm") == 0 || strcmp(argv[i], "-image") == 0 || strcmp(argv[i], "-benchmark") == 0 || strcmp(argv[i], "-gganim") == 0) {
+                    cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Moving Mesh Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -gganim. Check wether you specified any of these" << endl;
+                    correct_benchmark = false;
+                }
+            }
+            if (correct_benchmark) {
+                cout << GREEN_TEXT << "CLI OPTION: " << RESET_COLOR << "Moving Mesh Animation" << endl;
+            }
+
+        } else if (strcmp(argv[i], "-mmanim") == 0 && argc <= i+2) {
+            found_command = true;
+            cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Did not specify number of frames and fps. Use: -mmanim num_frames fps" << endl;
+        }
 
 
-// OPTIONAL : do benchmarking for some seeds ---------------------------------------------------------------------
 
-/*
+        // option to animate grid generation
+        if (strcmp(argv[i], "-gganim") == 0 && argc > i+1) {
+            found_command = true;
+            run_option = 3;
+            bool correct_benchmark = true;
 
-    // choose seed numbers for which the benchmarking should be done
-    vector<int> seedvals;
-    //seedvals.push_back(1);
-    
-    seedvals.push_back(10);
-    //seedvals.push_back(30);
-    //seedvals.push_back(50);
-    //seedvals.push_back(100);
-    //seedvals.push_back(200);
-    //seedvals.push_back(300);
-    //seedvals.push_back(500);
-    //seedvals.push_back(1000);
-    //seedvals.push_back(3000);
-    //seedvals.push_back(5000);
-    //seedvals.push_back(10000);
-    //seedvals.push_back(15000);
-    //seedvals.push_back(20000);
-    //seedvals.push_back(30000);
-    //seedvals.push_back(100000);
-    //seedvals.push_back(300000);
-    //seedvals.push_back(500000);
-    //seedvals.push_back(1000000);
-    //seedvals.push_back(5000000);
+            if (is_integer(argv[i+1])) {
+                fps = atoi(argv[i+1]);
 
-    for (int i=10000; i< 500000; i+=10000) {
-        seedvals.push_back(i);
+            } else {
+                cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Specified number is not an integer: " << argv[i] << " " << argv[i+1] << endl;
+                correct_benchmark = false;
+            }
+
+            for (int j = 0; j<argc; j++) {
+                if (strcmp(argv[i], "-sort_option") == 0 || strcmp(argv[i], "-check") == 0 || strcmp(argv[i], "-algorithm") == 0 || strcmp(argv[i], "-image") == 0 || strcmp(argv[i], "-benchmark") == 0) {
+                    cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Grid Generation Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -mmanim. Check wether you specified any of these" << endl;
+                    correct_benchmark = false;
+                }
+            }
+            if (correct_benchmark) {
+                cout << GREEN_TEXT << "CLI OPTION: " << RESET_COLOR << "Grid Generation Animation" << endl;
+            }
+
+        } else if (strcmp(argv[i], "-gganim") == 0 && argc <= i+1) {
+            found_command = true;
+            cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Did not specify fps. Use: -gganim fps" << endl;
+        }
+
+
+
+        // option to get help
+        if (strcmp(argv[i], "-help") == 0 || strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
+            found_command = true;
+            need_help = true;
+            cout << "Voronoi Mesh Project - vmp" << endl << endl;
+            cout << "Program to generate voronoi meshes using different algorithms, visualize and benchmark them. \nWritten during project internship at ITA Heidelberg by Lucas Schleuss" << endl << endl;
+            cout << "-n                 : specify the number of seedpoints" << endl;
+            cout << "-fixed_seed        : fix the random seed and specify it" << endl;
+            cout << "-sort_option       : specify persorting of points" << endl;
+            cout << setw(21) << "" << "0 - no sort" << endl;
+            cout << setw(21) << "" << "1 - modulo sort (standard option)" << endl;
+            cout << setw(21) << "" << "2 - radially outward" << endl;
+            cout << setw(21) << "" << "3 - radially inward" << endl;
+            cout << "-check             : check mesh for correctness (for large point sets takes way longer than grid generation)" << endl;
+            cout << "-algorihm          : specify the algorithm used" << endl;
+            cout << setw(21) << "" << "0 - halfplane intersection O(n^2)" << endl;
+            cout << setw(21) << "" << "1 - point insertion O(nlogn) (standard option)" << endl;
+            cout << "-image             : plot image of mesh using python matplotlib and save file" << endl;
+            cout << "-benchmark         : benchmark algorithm, save benchmarking files and plot time and memory benchmark using python matplotlib" << endl;
+            cout << setw(21) << "" << "! benchmarking is not compatible with -n, -check, -image !" << endl;
+            cout << "-mmanim            : moving mesh animation, specify (frames) (fps)" << endl;
+            cout << setw(21) << "" << "! Moving Mesh Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -gganim !" << endl;
+            cout << "-gganim            : grid generation animation, specify (fps)" << endl;
+            cout << setw(21) <<  "" << "! Grid Generation Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -mmanim !" << endl;
+            
+            cout << "-h, -help, --help  : show this window and exit" << endl;
+
+        }
+
+        // error message for unknown commands
+        if (!found_command && argv[i][0] == '-') {
+            cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Unknown command found: " << argv[i] << " <- please remove or correct!" << endl;
+        }
+
     }
 
-    // name output file
-    string output = "for_memory_benchmark_4.csv";
 
-    // do the benchmarking
-    do_benchmarking(output, seedvals, false, 1, true, 0);  // first true or false: append or new file
+    // GENERATE MESH: generate voronoi mesh for given seed number and stop time for that
+    if (run_option == 0 && !need_help) {
 
-*/
+        cout << "generating points..." << endl;
 
-   
+        vector<Point> pts = generate_seed_points(N_seeds, fixed_seed, 0, 1, rd_seed, sort, sqrt(N_seeds), sort_scheme);
+        //vector<Point> pts = generate_uniform_seed_points(N_seeds, 0, 1);
+
+        cout << "start timer..." << endl;
+
+        // get the current time point before the code execution
+        chrono::high_resolution_clock::time_point start_time = chrono::high_resolution_clock::now();
+
+        // construct mesh
+        VoronoiMesh vmesh(pts);
+         if (algorithm == 0) {
+            vmesh.construct_mesh();         // <-- O(n^2) scaling half plane intersection
+        } else {
+            vmesh.do_point_insertion();     // <-- O(nlogn) scaling point insertion algoithm
+        }     
+
+        // get the current time point after the code execution
+        chrono::high_resolution_clock::time_point end_time = chrono::high_resolution_clock::now();
+
+        // calculate the duration of the code execution
+        chrono::microseconds duration = chrono::duration_cast<chrono::microseconds>(end_time - start_time);
+
+        cout << "end timer..." << endl;
+
+        // output the duration in microseconds
+        cout << "Execution time: " << duration.count() << " microseconds" << endl;
+
+        // save mesh to file
+        cout << "saving mesh to files..." << endl;
+        vmesh.save_mesh_to_files(0);
+
+        // OPTIONAL : do correctness checks 
+        if (check_option) {
+            // check mesh for correctness
+            bool tests = vmesh.check_mesh();                            // <-- usually take longer then generating the grid
+            if (tests) {
+                cout << "all tests: " << boolalpha << GREEN_TEXT << tests << RESET_COLOR << endl;
+            } else {
+                cout << "all tests: " << boolalpha << RED_TEXT << tests << RESET_COLOR << endl;
+            }
+        }
+
+        // OPTIONAL : print out max rss memory usage of the processs
+        long long max_memory = get_maxrss_memory();
+
+        long long total_capacity = vmesh.calculate_mesh_memory(true);
+        cout << "manually calculated mesh capacity: " << total_capacity/1024.0/1024.0 << "MB" << endl;
+
+        // Show Image
+        if (image_condition) {
+            int result = system("python3 ../visualisation.py -program 0 ");
+        }
+
+
+    }
+
+    
+// OPTIONAL : do benchmarking for some seeds ---------------------------------------------------------------------
+
+    if (run_option == 1 && !need_help) {
+    
+        // choose seed numbers for which the benchmarking should be done
+        vector<int> seedvals;
+        //seedvals.push_back(1);
+    
+        seedvals.push_back(10);
+        seedvals.push_back(30);
+        seedvals.push_back(50);
+        seedvals.push_back(100);
+        seedvals.push_back(200);
+        seedvals.push_back(300);
+        seedvals.push_back(500);
+        seedvals.push_back(1000);
+        seedvals.push_back(3000);
+        seedvals.push_back(5000);
+        seedvals.push_back(10000);
+        if (algorithm == 1) {
+            seedvals.push_back(15000);
+            seedvals.push_back(20000);
+            seedvals.push_back(30000);
+            seedvals.push_back(100000);
+            seedvals.push_back(300000);
+            seedvals.push_back(500000);
+            seedvals.push_back(1000000);
+        }
+
+        // name output file
+        string output = "benchmark.csv";
+
+        // do the benchmarking
+        do_benchmarking(output, seedvals, false, algorithm, sort, sort_scheme, fixed_seed, rd_seed);  // first true or false: append or new file
+
+        // Show Benchmarking plots
+        int result = system("python3 ../visualisation.py -program 1 ");
+
+
+        }
+
+
 // OPTIONAL : generate animations  -------------------------------------------------------------------------------
 
     // animation for a moving mesh
-    //generate_animation_files(300, 30);
+    if (run_option == 2) {
+        generate_animation_files(frames, N_seeds, fixed_seed, rd_seed);
 
-    //animate_algorithm(300, 42, 1, false, 0);
+        // Create a named std::string
+        string commandString = "python3 ../visualisation.py -program 2 -num_frames " + to_string(frames) + " -fps " + to_string(fps);
 
-// OPTIONAL : print out max rss memory usage of the process ------------------------------------------------------
+        // Use c_str() on the named string
+        const char* command = commandString.c_str();
 
-    // determine maximum memory usage of the whole process
-    long long max_memory = get_maxrss_memory();
+        int result = system(command);
+    }
 
-    //long long total_size = vmesh.calculate_mesh_memory(false);
-    //cout << "manually calculated mesh size: " << total_size/1024.0/1024.0 << "MB" << endl;
+    // grid generation animation
+    if (run_option == 3) {
 
-    long long total_capacity = vmesh.calculate_mesh_memory(true);
-    cout << "manually calculated mesh capacity: " << total_capacity/1024.0/1024.0 << "MB" << endl;
+        animate_algorithm(N_seeds, rd_seed, algorithm, sort, sort_scheme);
 
-    //cout << "now optimizing memory" << endl;
+        // Create a named std::string
+        string commandString = "python3 ../visualisation.py -program 3 -num_frames " + to_string(N_seeds) + " -fps " + to_string(fps);
 
-    //vmesh.optimize_mesh_memory();
+        // Use c_str() on the named string
+        const char* command = commandString.c_str();
 
-    //long long total_size_opt = vmesh.calculate_mesh_memory(false);
-    //cout << "manually calculated mesh size: " << total_size_opt/1024.0/1024.0 << "MB" << endl;
+        int result = system(command);
 
-    //long long total_capacity_opt = vmesh.calculate_mesh_memory(true);
-    //cout << "manually calculated mesh capacity: " << total_capacity_opt/1024.0/1024.0 << "MB" << endl;
-
-    //cout << "average step number to find cell:" << endl;
-    //cout << static_cast<double>(vmesh.total_steps)/static_cast<double>(vmesh.pts.size()) << endl;
+    }
 
     cout << "done" << endl;
 
