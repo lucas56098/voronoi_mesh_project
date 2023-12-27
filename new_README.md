@@ -3,6 +3,9 @@ Small C++ project to generate a voronoi mesh using a naive halfplane intersectio
 
 #### Table of contents
 1. [Introduction](#introduction)
+<p align="right">
+  <img src="./figures/readme_figures/example_voronoi_animation.gif" alt="moving_mesh" width="400" height="400">
+</p>
 2. [Naive Halfplane Intersection](#naive-halfplane-intersection)
 3. [Point Insertion](#point-insertion)
 4. [Performance and memory usage](#performance-and-memory-usage)
