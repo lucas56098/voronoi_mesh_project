@@ -80,9 +80,54 @@ For peformance benchmarking the time the generation took on my PC (MacBook Pro M
 </p>
 
 ## Correctness checks
-Checking the mesh after generation is an important part to verify that the algorithm works as expected.
+Checking the mesh after generation is an important part to verify that the algorithm works as expected. For that we try to check different properies a voronoi mesh should have. We do the following checks: 
+- `check_equidistance()`: Test if every vertex has at least three equidistant seedpoints. (Definition of a vertex)
+- `check_area()` : Compute the total area of all cells added up. (Should equal 1 up to some finite precision limits)
+- `check_neighbours` : Test if every neigbour of a cell has that cell as a neigbour as well.
+Checks can be activated using `-check` as an option in the command line interface. However one should note that for large point sets the mesh generation is way faster than the correctness checks so i would not recommend to use them only if really needed for very huge point sets.
 
 ## Getting started
+Before starting make sure you have the following installed:
+
+- C++ with a working compiler
+- CMake (optional one can manually build the project)
+- Git (alternatively the git clone in the getting started can be replaced by just downloading the files manually)
+
+For the visualisation in python the following packages are needed:
+- argparse, time, tqdm, matplotlib, numpy, PIL, scipy
+
+Start by going into the folder where you want to clone the repository into and do:
+
+```bash
+git clone https://github.com/lucas56098/voronoi_mesh_project.git
+```
+
+Then go into the voronoi_mesh_project, create a build folder and go into that as well.
+
+```bash
+cd voronoi_mesh_project
+mkdir build
+cd build
+```
+
+In that folder build the program using cmake
+
+```bash
+cmake ..
+cmake --build .
+```
+
+The program is now build and can be run using `./vmp`. For example one could try
+
+```bash
+./vmp -n 100 -fixed_seed 42 -image
+```
+
+If everything works fine the grid will be generated for 100 seeds and stored into `build/files`. Also the grid will be plotted using python and the final image will be stored as `figures/single_picture.pdf`. It should look something like this:
+<p align="left">
+  <img src="./figures/readme_figures/getting_started_terminal.png" alt="terminal" width="566" height="400">
+  <img src="./figures/readme_figures/getting_started_plot.png" alt="figure" width="436" height="400">
+</p>
 
 
 ## Run options
