@@ -21,35 +21,41 @@ There are some geometrical operations which are essential to the algortithms and
 - First there is `intersect_two_halfplanes()` where the first halfplane usually is the current halfplane and the second halfplane is the one to intersect. In 2D this reduces to solving a linear equation system evaluating some determinants. For the intersection we store the intersecting point, the second halfplane and the signed distance (relative to normed vector pointed along the halfplane) to the midpoint of the first/current halfplane.
 - This way we can find the smallest positive intersection (`find_smallest_pos_intersect()`) by intersecting all the necessary halfplanes with the current halfplane and minimizing for the distance to either the midpoint or the last vertex depending on situation.
 
+### Folder structure
+In the main folder there is the C++ program with its header files and the python file for visualisation. 
+- `./figures` : the outputs of any visualization will be saved.
+    - `./figures/readme_figures` : are the images for the readme
+- `./build` : will be the folder where you will build your executable
+    - `./build/files` : here you will find any saved mesh
+    - `./build/benchmarks` : if you do a benchmark here the raw files will be saved. the plots however still are in `./figures`
 
-### Naive Halfplane intersection
+## Naive Halfplane intersection
 <p align="left">
   <img src="./figures/readme_figures/explainer_hp_intersection.gif" alt="hp_intersection_explainer" width="400" height="400">
   <img src="./figures/readme_figures/hp_intersection.gif" alt="hp_intersection" width="400" height="400">
 </p>
 
-The naive halfplane algorithm can be found as the `construct_mesh()` function of the `VoronoiMesh`.
-gif of grid generation here also explainer gif
+The naive halfplane algorithm can be found as the `construct_mesh()` function of the `VoronoiMesh`. It is the slower of the both algorithms but conceptually easier to understand. 
 
 
 part on boundary handling
 
-### Point insertion
+## Point insertion
 The point insertion algorithm can be found as the `do_point_insertion()` function of the `VoronoiMesh`.
 gif of grid generation here also explainer gif
 part on boundary handling (with how to leave and the boundary test)
 
-#### Presorting points
-
+### Presorting points
 ### Degeneracy
 
-### Performance and memory usage
 
-### Correctness checks
+## Performance and memory usage
+
+
+## Correctness checks
 
 
 ## Getting started
 
-## Run options
 
-### Checking the Mesh
+## Run options
