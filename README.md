@@ -176,8 +176,9 @@ The next options are specific and not compatible with all of the options above!
 
 If anything is unclear:
 
-`-h`,`-help`,`--help`               : show this window and exit
+`-h`,`-help`,`--help`               : will show this list
 
 
 ## Acknowledgements
-Many thanks do [Dylan](https://github.com/dnelson86) and [Chris](https://github.com/cbyrohl) from the Institute for Theoretical Astrophysics Heidelberg who guided me through this project and spend many hours discussing conceptual problems and brainstorming further ideas. It was a lot of fun!
+Many thanks do [Dylan](https://github.com/dnelson86) and [Chris](https://github.com/cbyrohl) from the Institute for Theoretical Astrophysics Heidelberg who guided me through this project and spend many hours discussing conceptual problems and brainstorming further ideas. 
+It was a lot of fun!
