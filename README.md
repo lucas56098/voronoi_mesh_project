@@ -128,8 +128,8 @@ The program is now build and can be run using `./vmp`. For example one could try
 
 If everything works fine the grid will be generated for 100 seeds and stored into `build/files`. Also the grid will be plotted using python and the final image will be stored as `figures/single_picture.pdf`. It should look something like this:
 <p align="left">
-  <img src="./figures/readme_figures/getting_started_terminal.png" alt="terminal" width="566" height="400">
-  <img src="./figures/readme_figures/getting_started_plot.png" alt="figure" width="380" height="400">
+  <img src="./figures/readme_figures/getting_started_terminal.png" alt="terminal" width="425" height="300">
+  <img src="./figures/readme_figures/getting_started_plot.png" alt="figure" width="285" height="300">
 </p>
 
 ## Run options
