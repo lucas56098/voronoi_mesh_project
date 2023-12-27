@@ -23,7 +23,8 @@ There are some geometrical operations which are essential to the algortithms and
 
 
 ### Naive Halfplane intersection
-
+![til](./figures/readme_figures/explainer_hp_intersection.gif)
+![til](./figures/readme_figures/hp_intersection.gif)
 The naive halfplane algorithm can be found as the `construct_mesh()` function of the `VoronoiMesh`.
 gif of grid generation here also explainer gif
 
