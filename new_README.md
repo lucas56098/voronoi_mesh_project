@@ -1,7 +1,11 @@
 # Voronoi Mesh Project - vmp
 Small C++ project to generate a voronoi mesh using a naive halfplane intersection and point insertion algorithm. Optional also some visualisaition and benchmarking tools are available. This project was done during an undergraduate project internship in the Group of Dr. Dylan Nelson at ITA Heidelberg.
 
-1. [Introduction](#Introduction)
+#### Table of contents
+1. [Introduction](#introduction)
+2. [Getting started](#getting-started)
+3. [Run options](#run-options)
+
 
 ## Introduction
 Voronoi meshes can be used in many applications. One such application for example are cosmological hydrodynamical simulations 
