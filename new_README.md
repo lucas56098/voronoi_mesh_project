@@ -23,9 +23,9 @@ There are some geometrical operations which are essential to the algortithms and
 
 
 ### Naive Halfplane intersection
-<p align="center">
-  <img src="./figures/readme_figures/explainer_hp_intersection.gif" alt="hp_intersection_explainer" width="300" height="300">
-  <img src="./figures/readme_figures/hp_intersection.gif" alt="hp_intersection" width="300" height="300">
+<p align="left">
+  <img src="./figures/readme_figures/explainer_hp_intersection.gif" alt="hp_intersection_explainer" width="400" height="400">
+  <img src="./figures/readme_figures/hp_intersection.gif" alt="hp_intersection" width="400" height="400">
 </p>
 
 The naive halfplane algorithm can be found as the `construct_mesh()` function of the `VoronoiMesh`.
