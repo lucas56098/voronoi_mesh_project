@@ -5,9 +5,11 @@
 #include <vector>
 #include <fstream>
 #include <cstdlib>
+#include <sys/stat.h>
 #include <sys/resource.h>
 #include "Point.h"
 #include "VoronoiMesh.h"
+
 
 // ANSI escape codes for text colors
 #define RED_TEXT "\033[1;31m"
@@ -342,7 +344,21 @@ bool is_integer(const string& str) {
 
 // MAIN :  -------------------------------------------------------------------------------------------------------
 int main (int argc, char *argv[]) {
-    
+
+    // check if directories exist
+    const char* dir1 = "files";
+    const char* dir2 = "benchmarks";
+    struct stat sb;
+ 
+    if (!(stat(dir1, &sb) == 0)) {
+        int result = system("mkdir files");
+    }
+    if (!(stat(dir2, &sb) == 0)) {
+        int result = system("mkdir benchmarks");
+    }
+ 
+
+
     // Standard Values for CLI options
     int N_seeds = 20;
     bool fixed_seed = false;
