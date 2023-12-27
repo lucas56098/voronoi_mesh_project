@@ -8,7 +8,7 @@ The voronoi mesh generation algorithms can be divided into direct and indirect a
 The two algorithms we looked at are a naive halfplane intersection algorithm which at best scales with $ \mathcal{O}(n^2) $
 
 ###
-
+This sentence uses `$` delimiters to show math inline:  $\sqrt{3x-1}+(1+x)^2$
 ## Getting started
 
 ## Run options
