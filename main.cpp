@@ -554,7 +554,7 @@ int main (int argc, char *argv[]) {
             cout << "Program to generate voronoi meshes using different algorithms, visualize and benchmark them. \nWritten during project internship at ITA Heidelberg by Lucas Schleuss" << endl << endl;
             cout << "-n                 : specify the number of seedpoints" << endl;
             cout << "-fixed_seed        : fix the random seed and specify it" << endl;
-            cout << "-sort_option       : specify persorting of points" << endl;
+            cout << "-sort_option       : specify presorting of points" << endl;
             cout << setw(21) << "" << "0 - no sort" << endl;
             cout << setw(21) << "" << "1 - modulo sort (standard option)" << endl;
             cout << setw(21) << "" << "2 - radially outward" << endl;

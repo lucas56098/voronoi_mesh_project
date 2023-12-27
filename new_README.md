@@ -134,11 +134,11 @@ If everything works fine the grid will be generated for 100 seeds and stored int
 ## Run options
 Now that we have a working installation here is an overview of what you can do with the command line interface.
 
-`-n`                 : specify the number of seedpoints
+`-n [int N_seeds]`                  : specify the number of seedpoints 
 
-`-fixed_seed`        : fix the random seed and specify it
+`-fixed_seed [int rd_seed]`         : fix the random seed and specify it 
 
-`-sort_option`       : specify persorting of points
+`-sort_option [int sort]`           : specify presorting of points
 
                      0 - no sort
 
@@ -148,18 +148,34 @@ Now that we have a working installation here is an overview of what you can do w
 
                      3 - radially inward
 
-`-check`             : check mesh for correctness (for large point sets takes way longer than grid generation)
+`-check`                            : check mesh for correctness (for large point sets takes way longer than grid generation)
 
-`-algorihm`          : specify the algorithm used
+`-algorihm [int algorithm]`         : specify the algorithm used
 
                      0 - halfplane intersection O(n^2)
+
                      1 - point insertion O(nlogn) (standard option)
-`-image`             : plot image of mesh using python matplotlib and save file
-`-benchmark`         : benchmark algorithm, save benchmarking files and plot time and memory benchmark using python matplotlib
-                     ! benchmarking is not compatible with -n, -check, -image, - gganim, -mmanim !
-`-mmanim`            : moving mesh animation, specify (frames) (fps)
-                     ! Moving Mesh Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -gganim !
-`-gganim`            : grid generation animation, specify (fps)
-                     ! Grid Generation Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -mmanim !
-`-h`,`-help`,`--help`: show this window and exit
+
+`-image`                            : plot image of mesh using python matplotlib and save file
+
+The next options are specific and not compatible with all of the options above!
+
+`-benchmark`                        : benchmark algorithm, save benchmarking files and plot time and memory benchmark using python matplotlib
+
+                                    ! benchmarking is not compatible with -n, -check, -image, - gganim, -mmanim !
+
+`-mmanim [int N_frames] [int fps]`  : moving mesh animation, specify (frames) (fps)
+
+                                    ! Moving Mesh Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -gganim !
+
+`-gganim [int fps]`                 : grid generation animation, specify (fps)
+
+                                    ! Grid Generation Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -mmanim !
+
+
+If anything is unclear:
+
+`-h`,`-help`,`--help`               : show this window and exit
+
+
 
