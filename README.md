@@ -12,7 +12,7 @@ Small C++ project to generate a voronoi mesh using a naive halfplane intersectio
 8. [Acknowledgements](#acknowledgements)
 
 <p align="left">
-  <img src="./figures/readme_figures/example_voronoi_animation.gif" alt="moving_mesh" class = "img-responsive" style="max-width: 600px;">
+  <img src="./figures/readme_figures/example_voronoi_animation.gif" alt="moving_mesh" class = "img-responsive" style="max-width: 100px;">
 </p>
 
 ## Introduction
