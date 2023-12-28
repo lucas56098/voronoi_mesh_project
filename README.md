@@ -1,10 +1,10 @@
 # Voronoi Mesh Project - vmp
-Small C++ project to generate a voronoi mesh using a naive halfplane intersection and point insertion algorithm. Optional also some visualisaition and benchmarking tools are available. This project was done during an undergraduate project internship in the Group of Dr. Dylan Nelson at ITA Heidelberg. If you want to learn more about the algorithms and how they work read the first few segments as well. Otherwise feel free to just skip to the getting started part.
+Small C++ project to generate a voronoi mesh using a naive halfplane intersection and point insertion algorithm. Optional also some visualisaition and benchmarking tools are available. This work was done during an undergraduate project internship, in the Group of Dr. Dylan Nelson at ITA Heidelberg. If you want to learn more about the algorithms and how they work read the first few segments as well. Otherwise, feel free to just skip to the getting started part.
 
 #### Table of contents
 1. [Introduction](#introduction)
-2. [Naive Halfplane Intersection](#naive-halfplane-intersection)
-3. [Point Insertion](#point-insertion)
+2. [Naive halfplane intersection](#naive-halfplane-intersection)
+3. [Point insertion](#point-insertion)
 4. [Performance and memory usage](#performance-and-memory-usage)
 5. [Correctness checks](#correctness-checks)
 6. [Getting started](#getting-started)
@@ -12,7 +12,7 @@ Small C++ project to generate a voronoi mesh using a naive halfplane intersectio
 8. [Acknowledgements](#acknowledgements)
 
 <p align="left">
-  <img src="./figures/readme_figures/example_voronoi_animation.gif" alt="moving_mesh" width="600" height="600">
+  <img src="./figures/readme_figures/example_voronoi_animation.gif" alt="moving_mesh" width="600" height="600", class = "img-responsive">
 </p>
 
 ## Introduction
@@ -22,13 +22,13 @@ The two algorithms we looked at are a naive halfplane intersection algorithm whi
 
 ### Folder structure
 In the main folder there is the C++ program with its header files and the python file for visualisation. 
-- `./figures` : here the outputs of any visualization will be saved.
-    - `./figures/readme_figures` : here are the images for the readme
-- `./build` : this will be the folder where you will build your executable
-    - `./build/files` : here you will find any saved mesh
+- `./figures` : here the outputs of any visualization will be saved (e.g. image, benchmark, mmanim, gganim)
+    - `./figures/readme_figures` : here are the images for the readme 
+- `./build` : this will be the folder where you will build your executable into
+    - `./build/files` : here you will find any saved mesh files stored in edge-, verticie- and seedfiles
     - `./build/benchmarks` : if you do a benchmark here the raw files will be saved. the plots however still are in `./figures`
 
-### Object structure and Methods
+### Object structure and methods
 To get a brief overwiev of the program structure we first look at the objects. There is an `Point` object which basically just stores an x and y valaue. Two of such points can be used to initalize a `Halfplane` (which, strictly speaking, in 2D is just a straight line) which is the perpendicular bisector between the two points. In the halfplane itself the midpoint between the two initializing points and a normed vector pointed along the halfplane are stored. Additionaly the different objects store indices for better finding them in the different data structures but i'll skip over that here.
 A `VoronoiCell` is an object consisting of a seedpoint, a vector of verticies (also points),  a vector of edges (the final halfplanes) and a vector of halfplanes needed for the construction which after generation is cleared. The voronoi cells are stored in an `VoronoiMesh` in a vcell vector. Additional to those objects there is a structure called `intersection` to store some informations when intersection two halfplanes (e.g. intersecting point).
 
@@ -36,7 +36,7 @@ There are some geometrical operations which are essential to the algortithms and
 - First there is `intersect_two_halfplanes()` where the first halfplane usually is the current halfplane and the second halfplane is the one to intersect. In 2D this reduces to solving a linear equation system evaluating some determinants. For the intersection we store the intersecting point, the second halfplane and the signed distance (relative to normed vector pointed along the halfplane) to the midpoint of the first/current halfplane.
 - This way we can find the smallest positive intersection (`find_smallest_pos_intersect()`) by intersecting all the necessary halfplanes with the current halfplane and minimizing for the distance to either the midpoint or the last vertex depending on situation.
 
-## Naive Halfplane Intersection
+## Naive halfplane intersection
 <p align="left">
   <img src="./figures/readme_figures/explainer_hp_intersection.gif" alt="hp_intersection_explainer" width="400" height="400">
   <img src="./figures/readme_figures/hp_intersection.gif" alt="hp_intersection" width="400" height="400">
@@ -44,7 +44,7 @@ There are some geometrical operations which are essential to the algortithms and
 
 The naive halfplane algorithm can be found as the `construct_mesh()` function of the `VoronoiMesh`. It is the slower of the both algorithms but conceptually easier to understand. As one can see in the right gif a cell is generated exactly once and then stays this way the whole time. This is a conceptual difference to point insertion as we will later see. For the halfplane intersection one first determines the halfplane closest to the seed of the cell one wants to construct because this is the only halfplane where one can be sure, that its midpoint will be part of the edge of the cell. This halfplane will defenitely be part of the cell and can be stored. Starting from there one finds the halfplane intersection with the smallest positive relative distance to the midpoint of that first edge by intersecting the first edge with all other halfplanes that exist. The intersecting halfplane will be the next edge that can be stored and their intersection will be a vertex. For the next step finding the next smallest positive intersection the next edge becomes the current index and the vertex becomes the last vertex. This process repeats until one returns to the first halfplane again. The process is also visualised in the left gif. Boundary handling here is reached by just adding four halfplane boundaries to the total list of halfplanes to be checked. This algorithm in total needs on the order of N checks per cell with N cells. Thus this algorithm is $\mathcal{O}(n^2)$. We will check this in the performance benchmark later.
 
-## Point Insertion
+## Point insertion
 <p align="left">
   <img src="./figures/readme_figures/explainer_pt_insertion.gif" alt="pt_insertion_explainer" width="400" height="400">
   <img src="./figures/readme_figures/unsorted_point_insertion_clipped.gif" alt="pt_insertion" width="400" height="400">
@@ -74,7 +74,7 @@ Degeneracies are important to get right for a robust handling of special cases. 
 </p>
 
 ## Performance and memory usage
-For peformance benchmarking the time the generation took on my PC (MacBook Pro M1) was plotted as a function of points to generate. If you want to try some benchmarking for yourself feel free to use the `-benchmark` option in the command line interface. As one can see the algorithms scale as expected. In addition also an even more naive hp intersection scaling with $\mathcal{O}(n^3)$ is shown which however is not included in the final code. Also one can see that the sorting of the points according to the modulo sort is the final piece in the puzzle to archieve $\mathcal{O}(n\log{n})$ scaling, because otherwise for very large point sets the `find_cell_index()` function scales worse and it takes many steps to reach the cell where the point is in. Memorywise some improvements defenitely still can be made but i think it is quite hard to do this without the need to recompute stuff in the program or lose the quick acess to the vertecies. The memory grows approximately linear wich is kind of expected. In addition to that the maximum rss memory usage is still higher than the final mesh size because of the generation algorithms also taking up memory while running.
+For peformance benchmarking the time the generation took on my PC (MacBook Pro M1) was plotted as a function of points to generate. If you want to try some benchmarking for yourself feel free to use the `-benchmark` option in the command line interface. As one can see the algorithms scale as expected. In addition also an even more naive hp intersection scaling with $\mathcal{O}(n^3)$ is shown, which, however, is not included in the final code. Also one can see that the sorting of the points according to the modulo sort is the final piece in the puzzle to archieve $\mathcal{O}(n\log{n})$ scaling, because otherwise for very large point sets the `find_cell_index()` function scales worse and it takes many steps to reach the cell where the point is in. Memory-wise some improvements defenitely still can be made but i think it is quite hard to do this without the need to recompute stuff in the program or lose the quick acess to the vertecies. The memory grows approximately linear wich is kind of expected. In addition to that the maximum rss memory usage is still higher than the final mesh size because of the generation algorithms also taking up memory while running.
 <p align="left">
   <img src="./figures/readme_figures/example_benchmark.png" alt="benchmark" width="500" height="375">
   <img src="./figures/readme_figures/example_memory_benchmark.png" alt="memory_benchmark" width="500" height="375">
@@ -92,7 +92,7 @@ Checks can be activated using `-check` as an option in the command line interfac
 ## Getting started
 Before starting make sure you have the following installed:
 
-- C++ with a working compiler
+- C++ with a working compiler (only with stdlib)
 - CMake (optional one can manually build the project)
 - Git (alternatively the git clone in the getting started can be replaced by just downloading the files manually)
 
@@ -126,7 +126,7 @@ The program is now build and can be run using `./vmp`. For example one could try
 ./vmp -n 100 -fixed_seed 42 -image
 ```
 
-If everything works fine the grid will be generated for 100 seeds and stored into `build/files`. Also the grid will be plotted using python and the final image will be stored as `figures/single_picture.pdf`. It should look something like this:
+If everything works fine, the grid will be generated for 100 seeds and stored into `build/files`. Also the grid will be plotted using python and the final image will be stored as `figures/single_picture.pdf`. It should look something like this:
 <p align="left">
   <img src="./figures/readme_figures/getting_started_terminal.png" alt="terminal" width="425" height="300">
   <img src="./figures/readme_figures/getting_started_plot.png" alt="figure" width="285" height="300">
