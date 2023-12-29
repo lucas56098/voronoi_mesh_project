@@ -141,7 +141,7 @@ If everything works fine, the grid will be generated for 100 seeds and stored in
 </p>
 
 ## Run options
-Now that we have a working installation here is an overview of what you can do with the command line interface.
+Now that we have a working installation, here is an overview of what you can do with the command line interface.
 
 `-n [int N_seeds]`                  : specify the number of seed points 
 
@@ -165,21 +165,24 @@ Now that we have a working installation here is an overview of what you can do w
 
                      1 - point insertion O(nlogn) (standard option)
 
-`-image`                            : plot the image of the mesh using Python matplotlib and save the file
+`-image`                            : plot the image of the mesh using Python matplotlib and save the file.
 
 The next options are specific and not compatible with all of the options above!
 
 `-benchmark`                        : benchmark algorithm, save benchmarking files and plot time and memory benchmark using python matplotlib
 
-    ! benchmarking is not compatible with -n, -check, -image, - gganim, -mmanim !
+> [!IMPORTANT]  
+> benchmarking is not compatible with -n, -check, -image, - gganim, -mmanim
 
 `-mmanim [int N_frames] [int fps]`  : moving mesh animation, specify (frames) (fps)
 
-    ! Moving Mesh Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -gganim !
+> [!IMPORTANT]  
+>  Moving Mesh Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -gganim
 
 `-gganim [int fps]`                 : grid generation animation, specify (fps)
 
-    ! Grid Generation Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -mmanim !
+> [!IMPORTANT]  
+>  Grid Generation Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -mmanim
 
 
 If anything is unclear:
