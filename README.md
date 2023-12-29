@@ -99,6 +99,7 @@ Before starting make sure you have the following installed:
 
 For the visualisation in Python the following packages are needed :
 - argparse, time, tqdm, matplotlib, numpy, PIL, scipy
+
 (However, if no visualisation tools are used the program also runs without an installation of Python)
 
 
