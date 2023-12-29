@@ -69,26 +69,26 @@ Presorting the seedpoints speeds up the `find_cell_index()` function by first se
 </p>
 
 ### Degeneracy
-A degeneracy occurs when a vertex has more than three neighbours and thus the `find_smallest_pos_intersect()` function finds two or more halfplanes with the exact same smallest distance. Degeneracies are important to get right for a robust handling of special cases. However, handling exact degeneracies does not work with the code. For seedpoints degenerate to up to 1e-13 the algorithms still run quite stable, but exact degeneracies lead to problems. Be aware of that. Here is an example of an almost uniform grid. The seedpoints vary by around 1e-13 from the uniform grid.
+A degeneracy occurs, when a vertex has more than three neighbours and thus the `find_smallest_pos_intersect()` function finds two or more halfplanes with the exact same smallest distance. Degeneracies are important to get right for a robust handling of special cases. However, handling exact degeneracies does not work with the code. For seedpoints degenerate to up to 1e-13 the algorithms still runs quite stable, but exact degeneracies lead to problems. Be aware of that. Here is an example of an almost uniform grid. The seedpoints vary by around 1e-13 from the uniform grid.
 <p align="left">
   <img src="./figures/readme_figures/almost_uniform_grid.png" alt="almost_uniform" style="width: 50%;">
 </p>
 
 ## Performance and memory usage
-For performance benchmarking the time, the generation took on my PC (MacBook Pro M1), was plotted as a function of seedpoints to generate. If you want to try some benchmarking for yourself feel free to use the `-benchmark` option in the command line interface. As one can see the algorithms scale as expected. In addition, also an even more naive halfplane intersection scaling with $\mathcal{O}(n^3)$ is shown, which, however, is not included in the final code. Also one can see that the sorting of the seedpoints according to the modulo sort is the final piece in the puzzle to achieve $\mathcal{O}(n\log{n})$ scaling because otherwise for very large seedpoint sets the `find_cell_index()` function scales worse and it takes many steps to reach the cell where the seedpoint is in. Memory-wise some improvements still can be made, but I think it is quite hard to do this without the need to recompute stuff in the program or lose the quick access to the vertices. The memory grows approximately linear which is kind of expected. In addition to that the maximum RSS memory usage is still higher than the final mesh size because the generation algorithms also take up memory while running.
+For performance benchmarking, the time the generation took on my PC (MacBook Pro M1), was plotted as a function of seedpoints to generate. If you want to try some benchmarking for yourself feel free to use the `-benchmark` option in the command line interface. As one can see the algorithms scale as expected. In addition, also an even more naive halfplane intersection, scaling with $\mathcal{O}(n^3)$, is shown, which is not included in the final code. Also one can see, that the sorting of the seedpoints, according to the modulo sort, is the final piece in the puzzle, to achieve $\mathcal{O}(n\log{n})$ scaling. Otherwise, for very large seedpoint sets, the `find_cell_index()` function scales worse and it takes many steps to reach the cell, where the seedpoint is in. Regarding memory usage, some improvements can still be made, but it seems rather difficult to do this without the need to recompute variables or lose quick access to the vertices. The memory grows approximately linear which is as expected. In addition to that, the maximum RSS memory usage is still higher, than the final mesh size, because the generation algorithms also take up memory while running.
 <p align="left">
   <img src="./figures/readme_figures/example_benchmark.png" alt="benchmark" style="width: 45%;">
   <img src="./figures/readme_figures/example_memory_benchmark.png" alt="memory_benchmark" style="width: 45%;">
 </p>
 
 ## Correctness checks
-Checking the mesh after generation is an important part of verifying that the algorithm works as expected. For that, we try to check different properties a Voronoi mesh should have. We do the following checks: 
+Checking the mesh after generation, is an important part of verifying that the algorithm works as expected. For that, we try to check different properties a Voronoi mesh should have. We do the following checks: 
 
-- `check_equidistance()`: Test if every vertex has at least three equidistant seedpoints. (Definition of a vertex)
+- `check_equidistance()`: Test, if every vertex has at least three equidistant seedpoints. (Definition of a vertex)
 - `check_area()` : Compute the total area of all cells added up. (Should equal 1 up to some finite precision limits)
-- `check_neighbours()` : Test if every neighbour of a cell has that cell as a neighbour as well.
+- `check_neighbours()` : Test, if every neighbour of a cell has that cell as a neighbour as well.
 
-Checks can be activated using `-check` as an option in the command line interface. However one should note that for large seedpoint sets the mesh generation is way faster than the correctness checks. Therefore I would recommend using them, for very huge seedpoint sets, only if really needed.
+Checks can be activated using `-check` as an option in the command line interface. However one should note, that for large seedpoint sets the mesh generation is way faster, than the correctness checks. Therefore I would recommend using them, for very large seedpoint sets, only if really needed.
 
 ## Getting started
 Before starting make sure you have the following installed:
@@ -97,14 +97,14 @@ Before starting make sure you have the following installed:
 - CMake (optional one can manually build the project)
 - Git (alternatively one can manually download the files)
 
-For the visualisation in Python the following packages are needed :
+For the visualisation in Python, the following packages are needed :
 - tqdm, matplotlib, numpy, Pillow, scipy
 
 ```bash
 pip install tqdm matplotlib numpy Pillow scipy
 ```
 
-(However, if no visualisation tools are used the program also runs without an installation of Python)
+(However, if no visualisation tools are used, the program also runs without an installation of Python)
 
 
 Start by going into the folder where you want to clone the repository into and do:
@@ -128,13 +128,13 @@ cmake ..
 cmake --build .
 ```
 
-The program is now built and can be run using `./vmp`. For example, one could try
+The program is now built and can be run using `./vmp`. For example, one could try:
 
 ```bash
 ./vmp -n 100 -fixed_seed 42 -image
 ```
 
-If everything works fine, the grid will be generated for 100 seeds and stored into `build/files`. Also, the grid will be plotted using Python and the final image will be stored as `figures/single_picture.pdf`. It should look something like this:
+If everything works correctly, the grid will be generated for 100 seeds and stored into `build/files`. Also, the grid will be plotted using Python and the final image will be stored as `figures/single_picture.pdf`. It should look something like this:
 <p align="left">
   <img src="./figures/readme_figures/getting_started_terminal.png" alt="terminal" style="width: 50%;">
   <img src="./figures/readme_figures/getting_started_plot.png" alt="figure"style="width: 40%;">
