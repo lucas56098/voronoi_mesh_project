@@ -98,7 +98,11 @@ Before starting make sure you have the following installed:
 - Git (alternatively one can manually download the files)
 
 For the visualisation in Python the following packages are needed :
-- argparse, time, tqdm, matplotlib, numpy, PIL, scipy
+- tqdm, matplotlib, numpy, Pillow, scipy
+
+```bash
+pip install tqdm matplotlib numpy Pillow scipy
+```
 
 (However, if no visualisation tools are used the program also runs without an installation of Python)
 
