@@ -56,11 +56,11 @@ The point insertion algorithm can be found in the `do_point_insertion()` functio
   <img src="./figures/readme_figures/boundary2.png" alt="boundary2" style="width: 45%;">
 </p>
 
-In the left image, the leave condition would be satisfied while in the right image, the leave condition for that cell wouldn't be satisfied. When the boundary is left the algorithm continues normally as before. Given the `find_cell_index()` function is optimized this algorithm scales with $\mathcal{O}(n\log{n})$.
+In the left image, the leaving condition would be satisfied, while in the right image, the leaving condition for that cell wouldn't be satisfied. When the boundary is left, the algorithm continues normally as before. Given the `find_cell_index()` function is optimized, this algorithm scales with $\mathcal{O}(n\log{n})$.
 
 
 ### Presorting seedpoints
-Presorting the seedpoints speeds up the `find_cell_index()` function by first setting the start index to the cell index of the last inserted cell. If the seedpoints are not sorted, this of course is not a good guess. But if the seedpoints are spatially closely sorted, this is a really good guess and can largely reduce the number of steps needed to reach the cell we're looking for. Here are a few examples of sorting that are implemented in the command line interface (no sort, modulo sort, inout, outin). The modulo sort is the one with the best performance out of them. Some kind of Peano Hilbert curve or something similar might be even better but is not implemented here. 
+Presorting the seedpoints speeds up the `find_cell_index()` function by first setting the start index to the cell index of the last inserted cell. If the seedpoints are not sorted, this of course is not a good guess. But if the seedpoints are spatially closely sorted, this is a really good guess and can largely reduce the number of steps needed to reach the cell we're looking for. Here are a few examples of sorting, that are implemented in the command line interface (no sort, modulo sort, inout, outin). The modulo sort is the one with the best performance out of them. Some kind of Peano Hilbert curve or something similar might be even better, but is not implemented here. 
 <p align="left">
   <img src="./figures/readme_figures/unsorted_point_insertion.gif" alt="sort1" height = "300" width = "300">
   <img src="./figures/readme_figures/sorted_point_insertion.gif" alt="sort2" height = "300" width = "300">
@@ -69,8 +69,7 @@ Presorting the seedpoints speeds up the `find_cell_index()` function by first se
 </p>
 
 ### Degeneracy
-
-Degeneracies are important to get right for a robust handling of special cases. However, handling exact degeneracies does not work with the code. For seedpoints degenerate to up to 1e-13 the algorithms still run quite stable, but exact degeneracies lead to problems. Be aware of that. Here is an example of an almost uniform grid. The seedpoints vary by around 1e-13 from the uniform grid.
+A degeneracy occurs when a vertex has more than three neighbours and thus the `find_smallest_pos_intersect()` function finds two or more halfplanes with the exact same smallest distance. Degeneracies are important to get right for a robust handling of special cases. However, handling exact degeneracies does not work with the code. For seedpoints degenerate to up to 1e-13 the algorithms still run quite stable, but exact degeneracies lead to problems. Be aware of that. Here is an example of an almost uniform grid. The seedpoints vary by around 1e-13 from the uniform grid.
 <p align="left">
   <img src="./figures/readme_figures/almost_uniform_grid.png" alt="almost_uniform" style="width: 50%;">
 </p>
