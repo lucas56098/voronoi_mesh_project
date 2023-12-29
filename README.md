@@ -50,7 +50,7 @@ The naive halfplane algorithm can be found in the `construct_mesh()` function of
   <img src="./figures/readme_figures/unsorted_point_insertion_clipped.gif" alt="pt_insertion" height = "300" width = "300">
 </p>
 
-The point insertion algorithm can be found in the `do_point_insertion()` function of the `VoronoiMesh`. It is conceptually a bit more difficult and requires more focus on adapting the neighbouring cells and respecting boundary conditions. As one can see in the right gif this algorithm inserts one point after another to make a new cell. This is done by doing halfplanes with the respecive neighbouring cells until the new cell is fully generated. After generating the new cell, the neighbouring cells need to be adapted. For this reason after constructing a cell, the cell will likely be changed multiple times in the algorithm. Conceptually for this algorithm it is sufficient to look a the process of inserting one point, because this process repeats again and again. If we want to insert one point into an already existing mesh, we first need to find out in which cell we currently are. For that there exists a `find_cell_index()` function that starts from some specified cell and from there jumps step by step towards the new seedpoint until it can't get closer. The cell it is in then must be the cell where the point is in as well. This process can be optimized largely later on (see section on presorting points). When we know the cell we are in, we can construct the halfpane between the new seedpoint and the seedpoint of the cell we are in. This boundary will be part of the new cell. Now we want to find the smallest positive intersection with all the edges of the cell we are in relative to the midpoint. With that intersecting edge, we know which cell will be the next to use for constructing the new cell. The intersection with the edge gives us the vertex and making a halfplane between the next cell seedpoint and the new cell seedpoint gives us the next edge. Instead of the midpoint here we again continue using the vertex of the last intersection for the relative distances. This process can be repeated until we reach the first cell we started in again. Now that the new cell is constructed we need to adapt the surrounding cells by clipping their edges according to where the intersections have been. The whole process is visualised in the left gif. Boundary handling here is more difficult than in the first algorithm because when we reach a boundary there is no cell we can go into. Therefore we need special treatment here. The basic rule for that is to stay on the boundary as long as the leave condition is not satisfied. The leave condition is, that the halfplane between the new seedpoint and the seedpoint of the cell we are checking, intersects with the boundary inside of the cell we are checking. 
+The point insertion algorithm can be found in the `do_point_insertion()` function of the `VoronoiMesh`. It is conceptually a bit more difficult and requires more focus on adapting the neighbouring cells and respecting boundary conditions. As one can see in the right gif this algorithm inserts one seedpoint after another to make a new cell. This is done by doing halfplanes with the respecive neighbouring cells until the new cell is fully generated. After generating the new cell, the neighbouring cells need to be adapted. For this reason after constructing a cell, the cell will likely be changed multiple times in the algorithm. Conceptually for this algorithm it is sufficient to look a the process of inserting one seedpoint, because this process repeats again and again. If we want to insert one seedpoint into an already existing mesh, we first need to find out in which cell we currently are. For that there exists a `find_cell_index()` function that starts from some specified cell and from there jumps step by step towards the new seedpoint until it can't get closer. The cell it is in then must be the cell where the seedpoint is in as well. This process can be optimized largely later on (see section on presorting seedpoints). When we know the cell we are in, we can construct the halfpane between the new seedpoint and the seedpoint of the cell we are in. This boundary will be part of the new cell. Now we want to find the smallest positive intersection with all the edges of the cell we are in relative to the midpoint. With that intersecting edge, we know which cell will be the next to use for constructing the new cell. The intersection with the edge gives us the vertex and making a halfplane between the next cell seedpoint and the new cell seedpoint gives us the next edge. Instead of the midpoint here we again continue using the vertex of the last intersection for the relative distances. This process can be repeated until we reach the first cell we started in again. Now that the new cell is constructed, we need to adapt the surrounding cells by clipping their edges according to where the intersections have been. The whole process is visualised in the left gif. Boundary handling here is more difficult than in the first algorithm, because when we reach a boundary there is no cell we can go into. Therefore we need special treatment here. The basic rule for that is to stay on the boundary as long as the leave condition is not satisfied. The leave condition is, that the halfplane between the new seedpoint and the seedpoint of the cell we are checking, intersects with the boundary inside of the cell we are checking. 
 <p align="left">
   <img src="./figures/readme_figures/boundary1.png" alt="boundary1" style="width: 45%;">
   <img src="./figures/readme_figures/boundary2.png" alt="boundary2" style="width: 45%;">
@@ -59,8 +59,8 @@ The point insertion algorithm can be found in the `do_point_insertion()` functio
 In the left image, the leave condition would be satisfied while in the right image, the leave condition for that cell wouldn't be satisfied. When the boundary is left the algorithm continues normally as before. Given the `find_cell_index()` function is optimized this algorithm scales with $\mathcal{O}(n\log{n})$.
 
 
-### Presorting points
-Presorting the points speeds up the `find_cell_index()` function by first setting the start index to the cell index of the last inserted cell. If the points are not sorted this of course is not a good guess. But if the points are spatially closely sorted, this is a really good guess and can largely reduce the number of steps needed to reach the cell we're looking for. Here are a few examples of sorting that are implemented in the command line interface (no sort, modulo sort, inout, outin). The modulo sort is the one with the best performance out of them. Some kind of Peano Hilbert curve or something similar might be even better but is not implemented here. 
+### Presorting seedpoints
+Presorting the seedpoints speeds up the `find_cell_index()` function by first setting the start index to the cell index of the last inserted cell. If the seedpoints are not sorted, this of course is not a good guess. But if the seedpoints are spatially closely sorted, this is a really good guess and can largely reduce the number of steps needed to reach the cell we're looking for. Here are a few examples of sorting that are implemented in the command line interface (no sort, modulo sort, inout, outin). The modulo sort is the one with the best performance out of them. Some kind of Peano Hilbert curve or something similar might be even better but is not implemented here. 
 <p align="left">
   <img src="./figures/readme_figures/unsorted_point_insertion.gif" alt="sort1" height = "300" width = "300">
   <img src="./figures/readme_figures/sorted_point_insertion.gif" alt="sort2" height = "300" width = "300">
@@ -69,13 +69,14 @@ Presorting the points speeds up the `find_cell_index()` function by first settin
 </p>
 
 ### Degeneracy
-Degeneracies are important to get right for a robust handling of special cases. However, handling exact degeneracies does not work with the code. For points degenerate to up to 1e-13 the algorithms still run quite stable, but exact degeneracies lead to problems. Be aware of that. Here is an example of an almost uniform grid. The points vary by around 1e-13 from the uniform grid.
+
+Degeneracies are important to get right for a robust handling of special cases. However, handling exact degeneracies does not work with the code. For seedpoints degenerate to up to 1e-13 the algorithms still run quite stable, but exact degeneracies lead to problems. Be aware of that. Here is an example of an almost uniform grid. The seedpoints vary by around 1e-13 from the uniform grid.
 <p align="left">
   <img src="./figures/readme_figures/almost_uniform_grid.png" alt="almost_uniform" style="width: 50%;">
 </p>
 
 ## Performance and memory usage
-For performance benchmarking the time, the generation took on my PC (MacBook Pro M1), was plotted as a function of points to generate. If you want to try some benchmarking for yourself feel free to use the `-benchmark` option in the command line interface. As one can see the algorithms scale as expected. In addition, also an even more naive halfplane intersection scaling with $\mathcal{O}(n^3)$ is shown, which, however, is not included in the final code. Also one can see that the sorting of the points according to the modulo sort is the final piece in the puzzle to achieve $\mathcal{O}(n\log{n})$ scaling because otherwise for very large point sets the `find_cell_index()` function scales worse and it takes many steps to reach the cell where the point is in. Memory-wise some improvements still can be made, but I think it is quite hard to do this without the need to recompute stuff in the program or lose the quick access to the vertices. The memory grows approximately linear which is kind of expected. In addition to that the maximum RSS memory usage is still higher than the final mesh size because the generation algorithms also take up memory while running.
+For performance benchmarking the time, the generation took on my PC (MacBook Pro M1), was plotted as a function of seedpoints to generate. If you want to try some benchmarking for yourself feel free to use the `-benchmark` option in the command line interface. As one can see the algorithms scale as expected. In addition, also an even more naive halfplane intersection scaling with $\mathcal{O}(n^3)$ is shown, which, however, is not included in the final code. Also one can see that the sorting of the seedpoints according to the modulo sort is the final piece in the puzzle to achieve $\mathcal{O}(n\log{n})$ scaling because otherwise for very large seedpoint sets the `find_cell_index()` function scales worse and it takes many steps to reach the cell where the seedpoint is in. Memory-wise some improvements still can be made, but I think it is quite hard to do this without the need to recompute stuff in the program or lose the quick access to the vertices. The memory grows approximately linear which is kind of expected. In addition to that the maximum RSS memory usage is still higher than the final mesh size because the generation algorithms also take up memory while running.
 <p align="left">
   <img src="./figures/readme_figures/example_benchmark.png" alt="benchmark" style="width: 45%;">
   <img src="./figures/readme_figures/example_memory_benchmark.png" alt="memory_benchmark" style="width: 45%;">
@@ -88,7 +89,7 @@ Checking the mesh after generation is an important part of verifying that the al
 - `check_area()` : Compute the total area of all cells added up. (Should equal 1 up to some finite precision limits)
 - `check_neighbours()` : Test if every neighbour of a cell has that cell as a neighbour as well.
 
-Checks can be activated using `-check` as an option in the command line interface. However one should note that for large point sets the mesh generation is way faster than the correctness checks. Therefore I would recommend using them, for very huge point sets, only if really needed.
+Checks can be activated using `-check` as an option in the command line interface. However one should note that for large seedpoint sets the mesh generation is way faster than the correctness checks. Therefore I would recommend using them, for very huge seedpoint sets, only if really needed.
 
 ## Getting started
 Before starting make sure you have the following installed:
@@ -143,11 +144,11 @@ If everything works fine, the grid will be generated for 100 seeds and stored in
 ## Run options
 Now that we have a working installation, here is an overview of what you can do with the command line interface.
 
-`-n [int N_seeds]`                  : specify the number of seed points 
+`-n [int N_seeds]`                  : specify the number of seedpoints 
 
 `-fixed_seed [int rd_seed]`         : fix the random seed and specify it 
 
-`-sort_option [int sort]`           : specify presorting of points
+`-sort_option [int sort]`           : specify presorting of seedpoints
 
                      0 - no sort
 
@@ -157,7 +158,7 @@ Now that we have a working installation, here is an overview of what you can do 
 
                      3 - radially inward
 
-`-check`                            : check mesh for correctness (for large point sets takes way longer than grid generation)
+`-check`                            : check mesh for correctness (for large seedpoint sets takes way longer than grid generation)
 
 `-algorithm [int algorithm]`         : specify the algorithm used
 
