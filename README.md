@@ -182,7 +182,7 @@ The next options are specific and not compatible with all of the options above!
 `-gganim [int fps]`                 : grid generation animation, specify (fps)
 
 > [!IMPORTANT]  
->  Grid Generation Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -mmanim
+>  Grid Generation Animation is not compatible with -check, -algorithm, -image, -benchmark, -mmanim
 
 
 If anything is unclear:

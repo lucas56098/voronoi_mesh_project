@@ -530,8 +530,8 @@ int main (int argc, char *argv[]) {
             }
 
             for (int j = 0; j<argc; j++) {
-                if (strcmp(argv[i], "-sort_option") == 0 || strcmp(argv[i], "-check") == 0 || strcmp(argv[i], "-algorithm") == 0 || strcmp(argv[i], "-image") == 0 || strcmp(argv[i], "-benchmark") == 0) {
-                    cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Grid Generation Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -mmanim. Check wether you specified any of these" << endl;
+                if (strcmp(argv[i], "-check") == 0 || strcmp(argv[i], "-algorithm") == 0 || strcmp(argv[i], "-image") == 0 || strcmp(argv[i], "-benchmark") == 0) {
+                    cout << RED_TEXT << "CLI ERROR: " << RESET_COLOR << "Grid Generation Animation is not compatible with -check, -algorithm, -image, -benchmark, -mmanim. Check wether you specified any of these" << endl;
                     correct_benchmark = false;
                 }
             }
@@ -569,7 +569,7 @@ int main (int argc, char *argv[]) {
             cout << "-mmanim            : moving mesh animation, specify (frames) (fps)" << endl;
             cout << setw(21) << "" << "! Moving Mesh Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -gganim !" << endl;
             cout << "-gganim            : grid generation animation, specify (fps)" << endl;
-            cout << setw(21) <<  "" << "! Grid Generation Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -mmanim !" << endl;
+            cout << setw(21) <<  "" << "! Grid Generation Animation is not compatible with -check, -algorithm, -image, -benchmark, -mmanim !" << endl;
             
             cout << "-h, -help, --help  : show this window and exit" << endl;
 
