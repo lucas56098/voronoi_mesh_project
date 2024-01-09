@@ -7,6 +7,9 @@
 #include <cstdlib>
 #include <sys/stat.h>
 #include <sys/resource.h>
+#include <algorithm>
+#include <cstring>
+#include <iomanip>
 #include "Point.h"
 #include "VoronoiMesh.h"
 
@@ -147,7 +150,8 @@ vector<Point> generate_uniform_seed_points(int N_approx, double min, double max)
     default_random_engine eng;
     eng = default_random_engine(42);
 
-    double val = 0.0000000000001;
+    //double val = 0.0000000000001;
+    double val = 0;
 
     uniform_real_distribution<double> distr(-val, val);
 
@@ -722,6 +726,7 @@ int main (int argc, char *argv[]) {
         int result = system(command);
 
     }
+
 
     cout << "done" << endl;
 

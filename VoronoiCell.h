@@ -1,5 +1,4 @@
 #include <vector>
-#include <vector>
 #include "Point.h"
 #include "Halfplane.h"
 

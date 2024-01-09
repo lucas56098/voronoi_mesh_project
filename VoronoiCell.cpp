@@ -106,17 +106,10 @@ void VoronoiCell::search_hp_closest_to_seed(Halfplane &first_hp) {
 
 // get the signed angle between two vectors (signed means angle from -180deg to +180deg continously, + == right)
 double VoronoiCell::get_signed_angle(Point u, Point v) {
+    double crossp = u.x*v.y - u.y*v.x;
     double dotp = u.x * v.x + u.y * v.y;
-    double crossp = v.x*u.y - v.y*u.x;
-    double u_abs = sqrt(u.x*u.x + u.y*u.y);
-    double v_abs = sqrt(v.x*v.x + v.y*v.y);
-    double angle;
 
-    if (dotp >= 0) {
-        angle = asin(crossp/(u_abs * v_abs));
-    } else {
-        angle = (M_PI/2 * crossp/fabs(crossp)) - asin(crossp/(u_abs * v_abs));
-    }
+    double angle = -atan2(crossp, dotp);
 
     return angle;
 }
@@ -168,9 +161,9 @@ void VoronoiCell::construct_cell(vector<Point> pts, vector<int> indices) {
         bool same_vertex = ((*intersections[i].intersecting_with).index2 == last_vertex_index2);
 
         // if distance <= smallest_pos_distance and positive replace intersection with closer one
-        if (rel_dist <= smallest_pos_dist && rel_dist > 0 && !same_vertex) {
+        if (rel_dist <= smallest_pos_dist && rel_dist > 0.0000001 && !same_vertex) {
             // check if there could be a degenerate case
-            if (rel_dist == smallest_pos_dist) {
+            if (rel_dist - 0.000001 < smallest_pos_dist && rel_dist + 0.000001 > smallest_pos_dist) {
                 need_to_check_for_degeneracy = true;
             }
             // update nearest intersection candidate
@@ -196,14 +189,16 @@ void VoronoiCell::construct_cell(vector<Point> pts, vector<int> indices) {
                 deg_hp_list.push_back(*intersections[i].intersecting_with);
             }
 
+
         }
 
         // calculate the signed angle between current_hp vec and deg_hp_list vec
         double max_angle = 0;
 
         for (int i = 0; i<deg_hp_list.size(); i++) {
+
             double angle = get_signed_angle(current_hp.hp_vec, deg_hp_list[i].hp_vec);
-            
+
             // choose the hp with highest signed angle as the next hp
             if (angle > max_angle) {
                 max_angle = angle;
@@ -211,6 +206,7 @@ void VoronoiCell::construct_cell(vector<Point> pts, vector<int> indices) {
             }
         }
     }
+    
     
     // when done save current halfplane as edge and next closest intersection as vertex
     edges.push_back(current_hp);
