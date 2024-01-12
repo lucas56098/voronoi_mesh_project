@@ -69,7 +69,8 @@ Presorting the seedpoints speeds up the `find_cell_index()` function by first se
 </p>
 
 ### Degeneracy
-A degeneracy occurs, when a vertex has more than three neighbours and thus the `find_smallest_pos_intersect()` function finds two or more halfplanes with the exact same smallest distance. Degeneracies are important to get right for a robust handling of special cases. However, handling exact degeneracies does not work with the code. For seedpoints degenerate to up to 1e-13 the algorithms still runs quite stable, but exact degeneracies lead to problems. Be aware of that. Here is an example of an almost uniform grid. The seedpoints vary by around 1e-13 from the uniform grid.
+A degeneracy occurs, when a vertex has more than three neighbours and thus the `find_smallest_pos_intersect()` function finds two or more halfplanes with the exact same smallest distance. Degeneracies are important to get right for a robust handling of special cases. 
+However, the handling of exact degeneracies is very limited within this code. The naive halfplane intersection algorithm includes a handling for degenerate cases, by comparing the direction of the degenerate halfplanes and choosing the right one. In theory this should work and was also tested by me for some example degenerate cases. For highly degenerate cases, like a larger uniform grid, however artifacts start to occur. This seems kind of strange and thus this degeneracy handling needs to be handled with care. The point insertion algorithm at the moment does not come with degeneracy handling. Be aware of that. For "almost" degenerate cases up to 1e-13 the code runs without problems even though there is no degeneracy handling included. Here is an example of an almost uniform grid. The seedpoints vary by around 1e-13 from the uniform grid.
 <p align="left">
   <img src="./figures/readme_figures/almost_uniform_grid.png" alt="almost_uniform" style="width: 50%;">
 </p>
