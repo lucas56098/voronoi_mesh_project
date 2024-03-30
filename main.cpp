@@ -573,7 +573,7 @@ int main (int argc, char *argv[]) {
             cout << "-mmanim            : moving mesh animation, specify (frames) (fps)" << endl;
             cout << setw(21) << "" << "! Moving Mesh Animation is not compatible with -sort_option, -check, -algorithm, -image, -benchmark, -gganim !" << endl;
             cout << "-gganim            : grid generation animation, specify (fps)" << endl;
-            cout << setw(21) <<  "" << "! Grid Generation Animation is not compatible with -check, -algorithm, -image, -benchmark, -mmanim !" << endl;
+            cout << setw(21) <<  "" << "! Grid Generation Animation is not compatible with -check, -image, -benchmark, -mmanim !" << endl;
             
             cout << "-h, -help, --help  : show this window and exit" << endl;
 
